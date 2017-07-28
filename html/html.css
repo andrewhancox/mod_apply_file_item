@@ -1,0 +1,30 @@
+
+table {
+	margin-bottom: 0.3em;
+}
+
+td {
+	padding: 0.3em;
+}
+
+
+.head {
+    font-weight: bold;
+    color: #105ba7;
+    background-color: #ddd;
+}
+
+.odd {
+    font-weight: bold;
+    background-color: #eee;
+}
+
+.even {
+    font-weight: bold;
+    background-color: #eee;
+}
+
+.tabtree .tabrow0 li {
+	margin-right: 0px;
+}
+

@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<XMLDB PATH="mod/apply/db" VERSION="20130420" COMMENT="XMLDB file for Moodle mod/apply"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="../../../lib/xmldb/xmldb.xsd"
+>
+  <TABLES>
+    <TABLE NAME="apply" COMMENT="all applys" NEXT="apply_submit">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="course"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="name"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="course" NEXT="intro"/>
+        <FIELD NAME="intro" TYPE="text" NOTNULL="true" SEQUENCE="false" PREVIOUS="name" NEXT="introformat"/>
+        <FIELD NAME="introformat" TYPE="int" LENGTH="4" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="intro" NEXT="email_notification"/>
+        <FIELD NAME="email_notification" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="introformat" NEXT="email_notification_user"/>
+        <FIELD NAME="email_notification_user" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="email_notification" NEXT="multiple_submit"/>
+        <FIELD NAME="multiple_submit" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="email_notification_user" NEXT="use_calendar"/>
+        <FIELD NAME="use_calendar" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="multiple_submit" NEXT="name_pattern"/>
+        <FIELD NAME="name_pattern" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="lastname" SEQUENCE="false" PREVIOUS="use_calendar" NEXT="enable_deletemode"/>
+        <FIELD NAME="enable_deletemode" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="name_pattern" NEXT="time_open"/>
+        <FIELD NAME="time_open" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="enable_deletemode" NEXT="time_close"/>
+        <FIELD NAME="time_close" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="time_open" NEXT="time_modified"/>
+        <FIELD NAME="time_modified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="time_close"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apply"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
+      </INDEXES>
+    </TABLE>
+    <TABLE NAME="apply_submit" COMMENT="filled out apply" PREVIOUS="apply" NEXT="apply_item">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="apply_id"/>
+        <FIELD NAME="apply_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="user_id"/>
+        <FIELD NAME="user_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="apply_id" NEXT="version"/>
+        <FIELD NAME="version" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="0:Draft, 1:New, 2: 2nd, ..." PREVIOUS="user_id" NEXT="title"/>
+        <FIELD NAME="title" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" PREVIOUS="version" NEXT="class"/>
+        <FIELD NAME="class" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="title" NEXT="acked"/>
+        <FIELD NAME="acked" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="class" NEXT="acked_user"/>
+        <FIELD NAME="acked_user" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="acked" NEXT="acked_time"/>
+        <FIELD NAME="acked_time" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="acked_user" NEXT="execd"/>
+        <FIELD NAME="execd" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="acked_time" NEXT="execd_user"/>
+        <FIELD NAME="execd_user" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="execd" NEXT="execd_time"/>
+        <FIELD NAME="execd_time" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="execd_user" NEXT="time_modified"/>
+        <FIELD NAME="time_modified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="execd_time" NEXT="otitle"/>
+        <FIELD NAME="otitle" TYPE="char" LENGTH="32" NOTNULL="true" SEQUENCE="false" PREVIOUS="time_modified" NEXT="oclass"/>
+        <FIELD NAME="oclass" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="otitle" NEXT="oacked"/>
+        <FIELD NAME="oacked" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="oclass" NEXT="oacked_user"/>
+        <FIELD NAME="oacked_user" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="oacked" NEXT="oacked_time"/>
+        <FIELD NAME="oacked_time" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="oacked_user" NEXT="oexecd"/>
+        <FIELD NAME="oexecd" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="oacked_time" NEXT="oexecd_user"/>
+        <FIELD NAME="oexecd_user" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="oexecd" NEXT="oexecd_time"/>
+        <FIELD NAME="oexecd_time" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="oexecd_user"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apply_completed" NEXT="apply_id"/>
+        <KEY NAME="apply_id" TYPE="foreign" FIELDS="apply_id" REFTABLE="apply_id" REFFIELDS="id" PREVIOUS="primary"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="apply_item" COMMENT="apply_items" PREVIOUS="apply_submit" NEXT="apply_value">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="apply_id"/>
+        <FIELD NAME="apply_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="template"/>
+        <FIELD NAME="template" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="apply_id" NEXT="name"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="template" NEXT="label"/>
+        <FIELD NAME="label" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="name" NEXT="presentation"/>
+        <FIELD NAME="presentation" TYPE="text" NOTNULL="true" SEQUENCE="false" PREVIOUS="label" NEXT="typ"/>
+        <FIELD NAME="typ" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="presentation" NEXT="hasvalue"/>
+        <FIELD NAME="hasvalue" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="typ" NEXT="position"/>
+        <FIELD NAME="position" TYPE="int" LENGTH="3" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="hasvalue" NEXT="required"/>
+        <FIELD NAME="required" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="position" NEXT="dependitem"/>
+        <FIELD NAME="dependitem" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="required" NEXT="dependvalue"/>
+        <FIELD NAME="dependvalue" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="dependitem" NEXT="options"/>
+        <FIELD NAME="options" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="dependvalue"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apply_item" NEXT="apply_id"/>
+        <KEY NAME="apply_id" TYPE="foreign" FIELDS="apply_id" REFTABLE="apply_id" REFFIELDS="id" PREVIOUS="primary" NEXT="template"/>
+        <KEY NAME="template" TYPE="foreign" FIELDS="template" REFTABLE="apply_template" REFFIELDS="id" PREVIOUS="apply_id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="apply_value" COMMENT="values of the completeds" PREVIOUS="apply_item" NEXT="apply_template">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="submit_id"/>
+        <FIELD NAME="submit_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="item_id"/>
+        <FIELD NAME="item_id" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="submit_id" NEXT="version"/>
+        <FIELD NAME="version" TYPE="int" LENGTH="6" NOTNULL="true" DEFAULT="0" SEQUENCE="false" COMMENT="0:Draft, 1:New, 2:2nd, ..." PREVIOUS="item_id" NEXT="value"/>
+        <FIELD NAME="value" TYPE="text" NOTNULL="true" SEQUENCE="false" PREVIOUS="version" NEXT="time_modified"/>
+        <FIELD NAME="time_modified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="value"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apply_value" NEXT="submit_id"/>
+        <KEY NAME="submit_id" TYPE="foreign" FIELDS="submit_id" REFTABLE="apply_submit" REFFIELDS="id" PREVIOUS="primary" NEXT="item_id"/>
+        <KEY NAME="item_id" TYPE="foreign" FIELDS="item_id" REFTABLE="apply_item" REFFIELDS="id" PREVIOUS="submit_id" NEXT="value_key"/>
+        <KEY NAME="value_key" TYPE="unique" FIELDS="submit_id, item_id, version" PREVIOUS="item_id"/>
+      </KEYS>
+    </TABLE>
+    <TABLE NAME="apply_template" COMMENT="templates of applystructures" PREVIOUS="apply_value">
+      <FIELDS>
+        <FIELD NAME="id" TYPE="int" LENGTH="10" NOTNULL="true" SEQUENCE="true" NEXT="course"/>
+        <FIELD NAME="course" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="id" NEXT="name"/>
+        <FIELD NAME="name" TYPE="char" LENGTH="255" NOTNULL="true" SEQUENCE="false" PREVIOUS="course" NEXT="ispublic"/>
+        <FIELD NAME="ispublic" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="name"/>
+      </FIELDS>
+      <KEYS>
+        <KEY NAME="primary" TYPE="primary" FIELDS="id" COMMENT="Primary key for apply_template"/>
+      </KEYS>
+      <INDEXES>
+        <INDEX NAME="course" UNIQUE="false" FIELDS="course"/>
+      </INDEXES>
+    </TABLE>
+  </TABLES>
+</XMLDB>
