@@ -28,17 +28,25 @@ define('APPLY_MULTICHOICERATED_ADJUST_SEP', '<<<<<');
 define('APPLY_MULTICHOICERATED_IGNOREEMPTY', 'i');
 define('APPLY_MULTICHOICERATED_HIDENOSELECT', 'h');
 
-class apply_item_multichoicerated extends apply_item_base {
+define('APPLY_MULTICHOICERATED_STYLE_FIELD_SEP', ':::::');
+define('APPLY_MULTICHOICERATED_STYLE_SEP', '-----');
+
+
+class apply_item_multichoicerated extends apply_item_base
+{
     protected $type = "multichoicerated";
     private $commonparams;
     private $item_form;
     private $item;
 
-    public function init() {
 
+    public function init()
+    {
     }
 
-    public function build_editform($item, $apply, $cm) {
+
+    public function build_editform($item, $apply, $cm)
+    {
         global $DB, $CFG;
         require_once('multichoicerated_form.php');
 
@@ -46,20 +54,35 @@ class apply_item_multichoicerated extends apply_item_base {
         $position = $item->position;
         $lastposition = $DB->count_records('apply_item', array('apply_id'=>$apply->id));
         if ($position == -1) {
-            $i_formselect_last = $lastposition + 1;
+            $i_formselect_last  = $lastposition + 1;
             $i_formselect_value = $lastposition + 1;
             $item->position = $lastposition + 1;
-        } else {
-            $i_formselect_last = $lastposition;
+        }
+        else {
+            $i_formselect_last  = $lastposition;
             $i_formselect_value = $item->position;
         }
         //the elements for position dropdownlist
         $positionlist = array_slice(range(0, $i_formselect_last), 1, $i_formselect_last, true);
 
         $item->presentation = empty($item->presentation) ? '' : $item->presentation;
+
+        $presen = explode(APPLY_MULTICHOICERATED_STYLE_FIELD_SEP, $item->presentation);
+        if (isset($presen[1])) {
+            $styles = explode(APPLY_MULTICHOICERATED_STYLE_SEP, $presen[1]);
+            $outside_style = isset($styles[0]) ? $styles[0] : get_string('outside_style_default', 'apply');
+            $item_style    = isset($styles[1]) ? $styles[1] : get_string('item_style_default',    'apply');
+        }
+        else {
+            $outside_style = get_string('outside_style_default', 'apply');
+            $item_style    = get_string('item_style_default',    'apply');
+        }
+        $item->outside_style = $outside_style;
+        $item->item_style    = $item_style;
+
         $info = $this->get_info($item);
 
-        $item->ignoreempty = $this->ignoreempty($item);
+        $item->ignoreempty  = $this->ignoreempty($item);
         $item->hidenoselect = $this->hidenoselect($item);
 
         //all items for dependitem
@@ -69,34 +92,40 @@ class apply_item_multichoicerated extends apply_item_base {
                              'typ'=>$item->typ,
                              'items'=>$applyitems,
                              'apply_id'=>$apply->id);
-
         //build the form
         $customdata = array('item' => $item,
                             'common' => $commonparams,
                             'positionlist' => $positionlist,
                             'position' => $position,
                             'info' => $info);
-
         $this->item_form = new apply_multichoicerated_form('edit_item.php', $customdata);
     }
 
+
     //this function only can used after the call of build_editform()
-    public function show_editform() {
+    public function show_editform()
+    {
         $this->item_form->display();
     }
 
-    public function is_cancelled() {
+
+    public function is_cancelled()
+    {
         return $this->item_form->is_cancelled();
     }
 
-    public function get_data() {
+
+    public function get_data()
+    {
         if ($this->item = $this->item_form->get_data()) {
             return true;
         }
         return false;
     }
 
-    public function save_item() {
+
+    public function save_item()
+    {
         global $DB;
 
         if (!$item = $this->item_form->get_data()) {
@@ -114,7 +143,8 @@ class apply_item_multichoicerated extends apply_item_base {
         $item->hasvalue = $this->get_hasvalue();
         if (!$item->id) {
             $item->id = $DB->insert_record('apply_item', $item);
-        } else {
+        }
+        else {
             $DB->update_record('apply_item', $item);
         }
 
@@ -124,26 +154,22 @@ class apply_item_multichoicerated extends apply_item_base {
 
     //gets an array with three values(typ, name, XXX)
     //XXX is an object with answertext, answercount and quotient
-    public function get_analysed($item, $groupid = false, $courseid = false) {
+    public function get_analysed($item, $groupid = false, $courseid = false)
+    {
         $analysed_item = array();
         $analysed_item[] = $item->typ;
         $analysed_item[] = $item->name;
 
         //die moeglichen Antworten extrahieren
         $info = $this->get_info($item);
-        $lines = null;
-        $lines = explode (APPLY_MULTICHOICERATED_LINE_SEP, $info->presentation);
-        if (!is_array($lines)) {
-            return null;
-        }
+        $lines = explode(APPLY_MULTICHOICERATED_LINE_SEP, $info->presentation);
+        if (!is_array($lines)) return null;
 
         //die Werte holen
         $values = apply_get_group_values($item, $groupid, $courseid, $this->ignoreempty($item));
-        if (!$values) {
-            return null;
-        }
-        //schleife ueber den Werten und ueber die Antwortmoeglichkeiten
+        if (!$values) return null;
 
+        //schleife ueber den Werten und ueber die Antwortmoeglichkeiten
         $analysed_answer = array();
         $sizeoflines = count($lines);
         for ($i = 1; $i <= $sizeoflines; $i++) {
@@ -169,16 +195,15 @@ class apply_item_multichoicerated extends apply_item_base {
         return $analysed_item;
     }
 
-    public function get_printval($item, $value) {
-        $printval = '';
 
-        if (!isset($value->value)) {
-            return $printval;
-        }
+    public function get_printval($item, $value)
+    {
+        $printval = '';
+        if (!isset($value->value)) return $printval;
 
         $info = $this->get_info($item);
+        $presentation = explode(APPLY_MULTICHOICERATED_LINE_SEP, $info->presentation);
 
-        $presentation = explode (APPLY_MULTICHOICERATED_LINE_SEP, $info->presentation);
         $index = 1;
         foreach ($presentation as $pres) {
             if ($value->value == $index) {
@@ -191,7 +216,9 @@ class apply_item_multichoicerated extends apply_item_base {
         return $printval;
     }
 
-    public function print_analysed($item, $itemnr = '', $groupid = false, $courseid = false) {
+
+    public function print_analysed($item, $itemnr = '', $groupid = false, $courseid = false)
+    {
         global $OUTPUT;
         $sep_dec = get_string('separator_decimal', 'apply');
         if (substr($sep_dec, 0, 2) == '[[') {
@@ -213,7 +240,7 @@ class apply_item_multichoicerated extends apply_item_base {
             $avg = 0.0;
             foreach ($analysed_vals as $val) {
                 $intvalue = $pixnr % 10;
-                $pix = $OUTPUT->pix_url('multichoice/' . $intvalue, 'apply');
+                $pix = $OUTPUT->image_url('multichoice/' . $intvalue, 'apply');
                 $pixnr++;
                 $pixwidth = intval($val->quotient * APPLY_MAX_PIX_LENGTH);
 
@@ -227,7 +254,8 @@ class apply_item_multichoicerated extends apply_item_base {
                 echo $val->answercount;
                 if ($val->quotient > 0) {
                     echo '&nbsp;('.$quotient.'&nbsp;%)';
-                } else {
+                }
+                else {
                     echo '';
                 }
                 echo '</td></tr>';
@@ -239,10 +267,11 @@ class apply_item_multichoicerated extends apply_item_base {
         }
     }
 
+
     public function excelprint_item(&$worksheet, $row_offset,
                              $xls_formats, $item,
-                             $groupid, $courseid = false) {
-
+                             $groupid, $courseid = false)
+    {
         $analysed_item = $this->get_analysed($item, $groupid, $courseid);
 
         $data = $analysed_item[2];
@@ -260,12 +289,10 @@ class apply_item_multichoicerated extends apply_item_base {
                                 $i + 2,
                                 trim($analysed_data->answertext).' ('.$analysed_data->value.')',
                                 $xls_formats->value_bold);
-
                 $worksheet->write_number($row_offset + 1,
                                 $i + 2,
                                 $analysed_data->answercount,
                                 $xls_formats->default);
-
                 $avg += $analysed_data->avg;
             }
             //mittelwert anzeigen
@@ -273,7 +300,6 @@ class apply_item_multichoicerated extends apply_item_base {
                                 count($data) + 2,
                                 get_string('average', 'apply'),
                                 $xls_formats->value_bold);
-
             $worksheet->write_number($row_offset + 1,
                                 count($data) + 2,
                                 $avg,
@@ -283,6 +309,7 @@ class apply_item_multichoicerated extends apply_item_base {
         return $row_offset;
     }
 
+
     /**
      * print the item at the edit-page of apply
      *
@@ -290,30 +317,51 @@ class apply_item_multichoicerated extends apply_item_base {
      * @param object $item
      * @return void
      */
-    public function print_item_preview($item) {
+    public function print_item_preview($item)
+    {
         global $OUTPUT, $DB;
 
-        $align = right_to_left() ? 'right' : 'left';
+        /*
+        $presen = explode(APPLY_MULTICHOICERATED_STYLE_FIELD_SEP, $item->presentation);
+        if (isset($presen[1])) {
+            $styles = explode(APPLY_MULTICHOICERATED_STYLE_SEP, $presen[1]);
+            $outside_style = isset($styles[0]) ? $styles[0] : get_string('outside_style_default', 'apply');
+            $item_style    = isset($styles[1]) ? $styles[1] : get_string('item_style_default',    'apply');
+        }
+        else {
+            $outside_style = get_string('outside_style_default', 'apply');
+            $item_style    = get_string('item_style_default',    'apply');
+        } */
+        $item->outside_style = '';  //$outside_style;
+        $item->item_style    = '';  //$item_style;
+
+        //
         $info = $this->get_info($item);
+        $lines = explode(APPLY_MULTICHOICERATED_LINE_SEP, $info->presentation);
+        $requiredmark =  ($item->required == 1) ? $str_required_mark : '';
+
+        $align = right_to_left() ? 'right' : 'left';
         $str_required_mark = '<span class="apply_required_mark">*</span>';
 
-        $lines = explode (APPLY_MULTICHOICERATED_LINE_SEP, $info->presentation);
-        $requiredmark =  ($item->required == 1) ? $str_required_mark : '';
         //print the question and label
-        echo '<div class="apply_item_label_'.$align.'">';
-        echo '('.$item->label.') ';
-        echo format_text($item->name.$requiredmark, true, false, false);
+        $output  = '';
+        $output .= '<div class="apply_item_label_'.$align.'">';
+        $output .= '('.$item->label.') ';
+        $output .= format_text($item->name.$requiredmark, true, false, false).' ['.$item->position.']';
         if ($item->dependitem) {
             if ($dependitem = $DB->get_record('apply_item', array('id'=>$item->dependitem))) {
-                echo ' <span class="apply_depend">';
-                echo '('.$dependitem->label.'-&gt;'.$item->dependvalue.')';
-                echo '</span>';
+                $output .= ' <span class="apply_depend">';
+                $output .= '('.$dependitem->label.'-&gt;'.$item->dependvalue.')';
+                $output .= '</span>';
             }
         }
-        echo '</div>';
+        $output .= '</div>';
+
+        apply_open_table_item_tag($output, true);
 
         //print the presentation
         echo '<div class="apply_item_presentation_'.$align.'">';
+        apply_item_box_start($item);
         switch($info->subtype) {
             case 'r':
                 $this->print_item_radio($item, false, $info, $align, true, $lines);
@@ -322,8 +370,12 @@ class apply_item_multichoicerated extends apply_item_base {
                 $this->print_item_dropdown($item, false, $info, $align, true, $lines);
                 break;
         }
+        apply_item_box_end();
         echo '</div>';
+
+        apply_close_table_item_tag();
     }
+
 
     /**
      * print the item at the complete-page of apply
@@ -334,27 +386,49 @@ class apply_item_multichoicerated extends apply_item_base {
      * @param bool $highlightrequire
      * @return void
      */
-    public function print_item_submit($item, $value = '', $highlightrequire = false) {
+    public function print_item_submit($item, $value = '', $highlightrequire = false)
+    {
         global $OUTPUT;
-        $align = right_to_left() ? 'right' : 'left';
-        $info = $this->get_info($item);
-        $str_required_mark = '<span class="apply_required_mark">*</span>';
 
-        $lines = explode (APPLY_MULTICHOICERATED_LINE_SEP, $info->presentation);
-        $requiredmark =  ($item->required == 1) ? $str_required_mark : '';
+        /*
+        $presen = explode(APPLY_MULTICHOICERATED_STYLE_FIELD_SEP, $item->presentation);
+        if (isset($presen[1])) {
+            $styles = explode(APPLY_MULTICHOICERATED_STYLE_SEP, $presen[1]);
+            $outside_style = isset($styles[0]) ? $styles[0] : get_string('outside_style_default', 'apply');
+            $item_style    = isset($styles[1]) ? $styles[1] : get_string('item_style_default',    'apply');
+        }
+        else {
+            $outside_style = get_string('outside_style_default', 'apply');
+            $item_style    = get_string('item_style_default',    'apply');
+        } */
+        $item->outside_style = '';  //$outside_style;
+        $item->item_style    = '';  //$item_style;
+
+        //
+        $info = $this->get_info($item);
+        $lines = explode(APPLY_MULTICHOICERATED_LINE_SEP, $info->presentation);
+
         if ($highlightrequire AND $item->required AND intval($value) <= 0) {
             $highlight = ' missingrequire';
-        } else {
+        }
+        else {
             $highlight = '';
         }
 
+        $align = right_to_left() ? 'right' : 'left';
+        $str_required_mark = '<span class="apply_required_mark">*</span>';
+        $requiredmark =  ($item->required == 1) ? $str_required_mark : '';
         //print the question and label
-        echo '<div class="apply_item_label_'.$align.$highlight.'">';
-            echo format_text($item->name.$requiredmark, true, false, false);
-        echo '</div>';
+        $output  = '';
+        $output .= '<div class="apply_item_label_'.$align.$highlight.'">';
+        $output .= format_text($item->name.$requiredmark, true, false, false);
+        $output .= '</div>';
+
+        apply_open_table_item_tag($output);
 
         //print the presentation
         echo '<div class="apply_item_presentation_'.$align.$highlight.'">';
+        apply_item_box_start($item);
         switch($info->subtype) {
             case 'r':
                 $this->print_item_radio($item, $value, $info, $align, false, $lines);
@@ -363,8 +437,12 @@ class apply_item_multichoicerated extends apply_item_base {
                 $this->print_item_dropdown($item, $value, $info, $align, false, $lines);
                 break;
         }
+        apply_item_box_end();
         echo '</div>';
+
+        apply_close_table_item_tag();
     }
+
 
     /**
      * print the item at the complete-page of apply
@@ -374,37 +452,71 @@ class apply_item_multichoicerated extends apply_item_base {
      * @param string $value
      * @return void
      */
-    public function print_item_show_value($item, $value = '') {
+    public function print_item_show_value($item, $value = '')
+    {
         global $OUTPUT;
-        $align = right_to_left() ? 'right' : 'left';
+
+        $presen = explode(APPLY_MULTICHOICERATED_STYLE_FIELD_SEP, $item->presentation);
+        if (isset($presen[1])) {
+            $styles = explode(APPLY_MULTICHOICERATED_STYLE_SEP, $presen[1]);
+            $outside_style = isset($styles[0]) ? $styles[0] : get_string('outside_style_default', 'apply');
+            $item_style    = isset($styles[1]) ? $styles[1] : get_string('item_style_default',    'apply');
+        }
+        else {
+            $outside_style = get_string('outside_style_default', 'apply');
+            $item_style    = get_string('item_style_default',    'apply');
+        }
+        $item->outside_style = $outside_style;
+        $item->item_style    = $item_style;
+
         $info = $this->get_info($item);
 
-        $lines = explode (APPLY_MULTICHOICERATED_LINE_SEP, $info->presentation);
-        $requiredmark = ($item->required == 1)?'<span class="apply_required_mark">*</span>':'';
+        $item->ignoreempty  = $this->ignoreempty($item);
+        $item->hidenoselect = $this->hidenoselect($item);
 
+        //
+        $info = $this->get_info($item);
+        $lines = explode(APPLY_MULTICHOICERATED_LINE_SEP, $info->presentation);
+
+        $align = right_to_left() ? 'right' : 'left';
+        $requiredmark = ($item->required == 1)?'<span class="apply_required_mark">*</span>':'';
         //print the question and label
-        echo '<div class="apply_item_label_'.$align.'">';
-        //    echo '('.$item->label.') ';
-            echo format_text($item->name . $requiredmark, true, false, false);
-        echo '</div>';
+        $output  = '';
+        $output .= '<div class="apply_item_label_'.$align.'">';
+        $output .= format_text($item->name . $requiredmark, true, false, false);
+        $output .= '</div>';
+
+        apply_open_table_item_tag($output);
 
         //print the presentation
-        echo '<div class="apply_item_presentation_'.$align.'">';
         $index = 1;
+        $match = false;
+
+        echo '<div class="apply_item_presentation_'.$align.'">';
+        echo $OUTPUT->box_start('generalbox boxalign'.$align);
+        apply_item_box_start($item);
+        //
         foreach ($lines as $line) {
             if ($value == $index) {
                 $item_value = explode(APPLY_MULTICHOICERATED_VALUE_SEP, $line);
-                echo $OUTPUT->box_start('generalbox boxalign'.$align);
                 echo text_to_html($item_value[1], true, false, false);
-                echo $OUTPUT->box_end();
+                $match = true;
                 break;
             }
             $index++;
         }
+        if (!$match) echo '&nbsp';
+
+        apply_item_box_end();
+        echo $OUTPUT->box_end();
         echo '</div>';
+
+        apply_close_table_item_tag();
     }
 
-    public function check_value($value, $item) {
+
+    public function check_value($value, $item)
+    {
         if ((!isset($value) OR $value == '' OR $value == 0) AND $item->required != 1) {
             return true;
         }
@@ -414,24 +526,28 @@ class apply_item_multichoicerated extends apply_item_base {
         return false;
     }
 
-    public function create_value($data) {
+
+    public function create_value($data)
+    {
         $data = trim($data);
         return $data;
     }
 
+
     //compares the dbvalue with the dependvalue
     //dbvalue is the number of one selection
     //dependvalue is the presentation of one selection
-    public function compare_value($item, $dbvalue, $dependvalue) {
-
+    public function compare_value($item, $dbvalue, $dependvalue)
+    {
         if (is_array($dbvalue)) {
             $dbvalues = $dbvalue;
-        } else {
+        }
+        else {
             $dbvalues = explode(APPLY_MULTICHOICERATED_LINE_SEP, $dbvalue);
         }
 
         $info = $this->get_info($item);
-        $presentation = explode (APPLY_MULTICHOICERATED_LINE_SEP, $info->presentation);
+        $presentation = explode(APPLY_MULTICHOICERATED_LINE_SEP, $info->presentation);
         $index = 1;
         foreach ($presentation as $pres) {
             $presvalues = explode(APPLY_MULTICHOICERATED_VALUE_SEP, $pres);
@@ -446,26 +562,38 @@ class apply_item_multichoicerated extends apply_item_base {
         return false;
     }
 
-    public function get_presentation($data) {
+
+    public function get_presentation($data)
+    {
         $present = $this->prepare_presentation_values_save(trim($data->itemvalues),
                                             APPLY_MULTICHOICERATED_VALUE_SEP2,
                                             APPLY_MULTICHOICERATED_VALUE_SEP);
         if (!isset($data->subtype)) {
             $subtype = 'r';
-        } else {
+        }
+        else {
             $subtype = substr($data->subtype, 0, 1);
         }
         if (isset($data->horizontal) AND $data->horizontal == 1 AND $subtype != 'd') {
             $present .= APPLY_MULTICHOICERATED_ADJUST_SEP.'1';
         }
+ 
+        $presentation = $subtype.APPLY_MULTICHOICERATED_TYPE_SEP.$present.
+                                 APPLY_MULTICHOICERATED_STYLE_FIELD_SEP.$data->outside_style.
+                                 APPLY_MULTICHOICERATED_STYLE_SEP.$data->item_style;
+
         return $subtype.APPLY_MULTICHOICERATED_TYPE_SEP.$present;
     }
 
-    public function get_hasvalue() {
+
+    public function get_hasvalue()
+    {
         return 1;
     }
 
-    public function get_info($item) {
+
+    public function get_info($item)
+    {
         $presentation = empty($item->presentation) ? '' : $item->presentation;
 
         $info = new stdClass();
@@ -475,7 +603,8 @@ class apply_item_multichoicerated extends apply_item_base {
         $info->presentation = '';
         $info->horizontal = false;
 
-        $parts = explode(APPLY_MULTICHOICERATED_TYPE_SEP, $item->presentation);
+        $presen = explode(APPLY_MULTICHOICERATED_STYLE_FIELD_SEP, $item->presentation);
+        $parts  = explode(APPLY_MULTICHOICERATED_TYPE_SEP, $presen[0]);
         @list($info->subtype, $info->presentation) = $parts;
 
         if (!isset($info->subtype)) {
@@ -488,7 +617,8 @@ class apply_item_multichoicerated extends apply_item_base {
 
             if (isset($info->horizontal) AND $info->horizontal == 1) {
                 $info->horizontal = true;
-            } else {
+            }
+            else {
                 $info->horizontal = false;
             }
         }
@@ -499,13 +629,16 @@ class apply_item_multichoicerated extends apply_item_base {
         return $info;
     }
 
-    private function print_item_radio($item, $value, $info, $align, $showrating, $lines) {
+
+    private function print_item_radio($item, $value, $info, $align, $showrating, $lines)
+    {
         $index = 1;
         $checked = '';
 
         if ($info->horizontal) {
             $hv = 'h';
-        } else {
+        }
+        else {
             $hv = 'v';
         }
         echo '<ul>';
@@ -521,17 +654,19 @@ class apply_item_multichoicerated extends apply_item_base {
                         ?>
                     </span>
                     <span class="apply_item_radiolabel_<?php echo $hv.'_'.$align;?>">
-                        <label for="<?php echo $item->typ . '_' . $item->id.'_xxx';?>">
+                        <!--  <label for="<?php echo $item->typ . '_' . $item->id.'_xxx';?>"> -->
                         <?php print_string('not_selected', 'apply');?>&nbsp;
-                        </label>
+                        <!-- </label> -->
                     </span>
                 </li>
             <?php
         }
+
         foreach ($lines as $line) {
             if ($value == $index) {
                 $checked = 'checked="checked"';
-            } else {
+            }
+            else {
                 $checked = '';
             }
             $radio_value = explode(APPLY_MULTICHOICERATED_VALUE_SEP, $line);
@@ -548,16 +683,17 @@ class apply_item_multichoicerated extends apply_item_base {
                 ?>
                 </span>
                 <span class="apply_item_radiolabel_<?php echo $hv.'_'.$align;?>">
-                    <label for="<?php echo $inputid;?>">
+                    <!-- <label for="<?php echo $inputid;?>"> -->
                         <?php
                             if ($showrating) {
                                 $str_rating_value = '('.$radio_value[0].') '.$radio_value[1];
                                 echo text_to_html($str_rating_value, true, false, false);
-                            } else {
+                            }
+                            else {
                                 echo text_to_html($radio_value[1], true, false, false);
                             }
                         ?>
-                    </label>
+                    <!-- </label> -->
                 </span>
             </li>
         <?php
@@ -566,10 +702,13 @@ class apply_item_multichoicerated extends apply_item_base {
         echo '</ul>';
     }
 
-    private function print_item_dropdown($item, $value, $info, $align, $showrating, $lines) {
+
+    private function print_item_dropdown($item, $value, $info, $align, $showrating, $lines)
+    {
         if ($info->horizontal) {
             $hv = 'h';
-        } else {
+        }
+        else {
             $hv = 'v';
         }
         echo '<ul>';
@@ -584,7 +723,8 @@ class apply_item_multichoicerated extends apply_item_base {
                 foreach ($lines as $line) {
                     if ($value == $index) {
                         $selected = 'selected="selected"';
-                    } else {
+                    }
+                    else {
                         $selected = '';
                     }
                     $dropdown_value = explode(APPLY_MULTICHOICERATED_VALUE_SEP, $line);
@@ -592,7 +732,8 @@ class apply_item_multichoicerated extends apply_item_base {
                         echo '<option value="'.$index.'" '.$selected.'>';
                         echo clean_text('('.$dropdown_value[0].') '.$dropdown_value[1]);
                         echo '</option>';
-                    } else {
+                    }
+                    else {
                         echo '<option value="'.$index.'" '.$selected.'>';
                         echo clean_text($dropdown_value[1]);
                         echo '</option>';
@@ -606,12 +747,9 @@ class apply_item_multichoicerated extends apply_item_base {
         echo '</ul>';
     }
 
-    public function prepare_presentation_values($linesep1,
-                                         $linesep2,
-                                         $valuestring,
-                                         $valuesep1,
-                                         $valuesep2) {
 
+    public function prepare_presentation_values($linesep1, $linesep2, $valuestring, $valuesep1, $valuesep2)
+    {
         $lines = explode($linesep1, $valuestring);
         $newlines = array();
         foreach ($lines as $line) {
@@ -620,7 +758,8 @@ class apply_item_multichoicerated extends apply_item_base {
             if (strpos($line, $valuesep1) === false) {
                 $value = 0;
                 $text = $line;
-            } else {
+            }
+            else {
                 @list($value, $text) = explode($valuesep1, $line, 2);
             }
 
@@ -631,7 +770,9 @@ class apply_item_multichoicerated extends apply_item_base {
         return $newlines;
     }
 
-    public function prepare_presentation_values_print($valuestring, $valuesep1, $valuesep2) {
+
+    public function prepare_presentation_values_print($valuestring, $valuesep1, $valuesep2)
+    {
         return $this->prepare_presentation_values(APPLY_MULTICHOICERATED_LINE_SEP,
                                                   "\n",
                                                   $valuestring,
@@ -639,7 +780,9 @@ class apply_item_multichoicerated extends apply_item_base {
                                                   $valuesep2);
     }
 
-    public function prepare_presentation_values_save($valuestring, $valuesep1, $valuesep2) {
+
+    public function prepare_presentation_values_save($valuestring, $valuesep1, $valuesep2)
+    {
         return $this->prepare_presentation_values("\n",
                         APPLY_MULTICHOICERATED_LINE_SEP,
                         $valuestring,
@@ -647,43 +790,57 @@ class apply_item_multichoicerated extends apply_item_base {
                         $valuesep2);
     }
 
-    public function set_ignoreempty($item, $ignoreempty=true) {
+
+    public function set_ignoreempty($item, $ignoreempty=true)
+    {
         $item->options = str_replace(APPLY_MULTICHOICERATED_IGNOREEMPTY, '', $item->options);
         if ($ignoreempty) {
             $item->options .= APPLY_MULTICHOICERATED_IGNOREEMPTY;
         }
     }
 
-    public function ignoreempty($item) {
+
+    public function ignoreempty($item)
+    {
         if (strstr($item->options, APPLY_MULTICHOICERATED_IGNOREEMPTY)) {
             return true;
         }
         return false;
     }
 
-    public function set_hidenoselect($item, $hidenoselect=true) {
+
+    public function set_hidenoselect($item, $hidenoselect=true)
+    {
         $item->options = str_replace(APPLY_MULTICHOICERATED_HIDENOSELECT, '', $item->options);
         if ($hidenoselect) {
             $item->options .= APPLY_MULTICHOICERATED_HIDENOSELECT;
         }
     }
 
-    public function hidenoselect($item) {
+
+    public function hidenoselect($item)
+    {
         if (strstr($item->options, APPLY_MULTICHOICERATED_HIDENOSELECT)) {
             return true;
         }
         return false;
     }
 
-    public function can_switch_require() {
+
+    public function can_switch_require()
+    {
         return true;
     }
 
-    public function value_type() {
+
+    public function value_type()
+    {
         return PARAM_INT;
     }
 
-    public function clean_input_value($value) {
+
+    public function clean_input_value($value)
+    {
         return clean_param($value, $this->value_type());
     }
 }

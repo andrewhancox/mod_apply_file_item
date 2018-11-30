@@ -21,8 +21,8 @@ class apply_textarea_form extends apply_item_form
     protected $type = "textarea";
 
     public function definition()
-	{
-		global $OUTPUT;
+    {
+        global $OUTPUT;
 
         $item = $this->_customdata['item'];
         $common = $this->_customdata['common'];
@@ -33,24 +33,41 @@ class apply_textarea_form extends apply_item_form
 
         $mform->addElement('header', 'general', get_string($this->type, 'apply'));
         $mform->addElement('advcheckbox', 'required', get_string('required', 'apply'), '' , null , array(0, 1));
-        $mform->addElement('text', 'name', get_string('item_name','apply'), array('size'=>APPLY_ITEM_NAME_TEXTBOX_SIZE, 'maxlength'=>255));
+        $mform->setType('required', PARAM_INT);
 
-		$label_help = ' '.$OUTPUT->help_icon('item_label','apply');
-        $mform->addElement('text', 'label', get_string('item_label','apply').$label_help, array('size'=>APPLY_ITEM_LABEL_TEXTBOX_SIZE,'maxlength'=>255));
-        $mform->addElement('select', 'itemwidth', get_string('textarea_width', 'apply').'&nbsp;', array_slice(range(0, 80), 5, 80, true));
-        $mform->addElement('select', 'itemheight', get_string('textarea_height', 'apply').'&nbsp;', array_slice(range(0, 40), 5, 40, true));
+        $mform->addElement('text', 'name',  get_string('item_name', 'apply'), array('size'=>APPLY_ITEM_NAME_TEXTBOX_SIZE, 'maxlength'=>255));
+        $mform->addElement('text', 'label', get_string('item_label','apply'), array('size'=>APPLY_ITEM_LABEL_TEXTBOX_SIZE,'maxlength'=>255));
+        $mform->addHelpButton('label', 'item_label', 'apply');
+        $mform->setType('label', PARAM_TEXT);
+
+        $mform->addElement('select', 'itemwidth',  get_string('textarea_width',  'apply').'&nbsp;', array_slice(range(0, 80), 5, 80, true));
+        $mform->setType('itemwidth', PARAM_INT);
+        $mform->addElement('select', 'itemheight', get_string('textarea_height', 'apply').'&nbsp;', array_slice(range(0, 40), 1, 40, true));
+        $mform->setType('itemheight', PARAM_INT);
+
+        $mform->addElement('text', 'outside_style',  get_string('outside_style', 'apply'), array('size'=>APPLY_ITEM_STYLE_TEXTBOX_SIZE, 'maxlength'=>255));
+        $mform->addHelpButton('outside_style', 'outside_style', 'apply');
+        $mform->setDefault('outside_style', get_string('outside_style_default', 'apply'));
+        $mform->setType('outside_style', PARAM_TEXT);
+
+        $mform->addElement('text', 'item_style',  get_string('item_style', 'apply'), array('size'=>APPLY_ITEM_STYLE_TEXTBOX_SIZE, 'maxlength'=>255));
+        $mform->addHelpButton('item_style', 'item_style', 'apply');
+        $mform->setDefault('item_style', get_string('item_style_default', 'apply'));
+        $mform->setType('item_style', PARAM_TEXT);
 
         parent::definition();
         $this->set_data($item);
     }
 
+
     public function get_data()
-	{
+    {
         if (!$item = parent::get_data()) {
             return false;
         }
 
-        $item->presentation = $item->itemwidth . '|'. $item->itemheight;
+        $item->presentation = $item->itemwidth.APPLY_TEXTAREA_SEP.$item->itemheight.
+                                               APPLY_TEXTAREA_SEP.$item->outside_style.APPLY_TEXTAREA_SEP.$item->item_style;
         return $item;
     }
 }

@@ -37,7 +37,7 @@ class restore_apply_activity_task extends restore_activity_task
      * Define (add) particular settings this activity can have
      */
     protected function define_my_settings()
-	{
+    {
         // No particular settings for this activity
     }
 
@@ -45,7 +45,7 @@ class restore_apply_activity_task extends restore_activity_task
      * Define (add) particular steps this activity can have
      */
     protected function define_my_steps()
-	{
+    {
         // apply only has one structure step
         $this->add_step(new restore_apply_activity_structure_step('apply_structure', 'apply.xml'));
     }
@@ -55,7 +55,7 @@ class restore_apply_activity_task extends restore_activity_task
      * processed by the link decoder
      */
     static public function define_decode_contents()
-	{
+    {
         $contents = array();
 
         $contents[] = new restore_decode_content('apply', array('intro'), 'apply');
@@ -69,7 +69,7 @@ class restore_apply_activity_task extends restore_activity_task
      * to the activity to be executed by the link decoder
      */
     static public function define_decode_rules()
-	{
+    {
         return array();
     }
 
@@ -80,7 +80,7 @@ class restore_apply_activity_task extends restore_activity_task
      * of {@link restore_log_rule} objects
      */
     static public function define_restore_log_rules()
-	{
+    {
         $rules = array();
 
         $rules[] = new restore_log_rule('apply', 'view',   'view.php?id={course_module}', '{apply}');
@@ -103,7 +103,7 @@ class restore_apply_activity_task extends restore_activity_task
      * activity level. All them are rules not linked to any module instance (cmid = 0)
      */
     static public function define_restore_log_rules_for_course()
-	{
+    {
         $rules = array();
 
         $rules[] = new restore_log_rule('apply', 'view all', 'index.php?id={course}', null);

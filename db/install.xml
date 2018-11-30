@@ -15,9 +15,12 @@
         <FIELD NAME="email_notification_user" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="email_notification" NEXT="multiple_submit"/>
         <FIELD NAME="multiple_submit" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="email_notification_user" NEXT="use_calendar"/>
         <FIELD NAME="use_calendar" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="multiple_submit" NEXT="name_pattern"/>
-        <FIELD NAME="name_pattern" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="lastname" SEQUENCE="false" PREVIOUS="use_calendar" NEXT="enable_deletemode"/>
-        <FIELD NAME="enable_deletemode" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="name_pattern" NEXT="time_open"/>
-        <FIELD NAME="time_open" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="enable_deletemode" NEXT="time_close"/>
+        <FIELD NAME="name_pattern" TYPE="char" LENGTH="16" NOTNULL="true" DEFAULT="lastname" SEQUENCE="false" PREVIOUS="use_calendar" NEXT="only_acked_accept"/>
+        <FIELD NAME="only_acked_accept" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="name_pattern" NEXT="enable_deletemode"/>
+        <FIELD NAME="enable_deletemode" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="only_acked_accept" NEXT="can_discard"/>
+        <FIELD NAME="can_discard" TYPE="int" LENGTH="1" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="enable_deletemode" NEXT="date_format"/>
+        <FIELD NAME="date_format" TYPE="char" LENGTH="32" NOTNULL="true" DEFAULT=" " SEQUENCE="false" PREVIOUS="can_discard" NEXT="time_open"/>
+        <FIELD NAME="time_open" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="date_format" NEXT="time_close"/>
         <FIELD NAME="time_close" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="time_open" NEXT="time_modified"/>
         <FIELD NAME="time_modified" TYPE="int" LENGTH="10" NOTNULL="true" DEFAULT="0" SEQUENCE="false" PREVIOUS="time_close"/>
       </FIELDS>

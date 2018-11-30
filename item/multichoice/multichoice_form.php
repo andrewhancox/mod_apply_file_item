@@ -21,8 +21,8 @@ class apply_multichoice_form extends apply_item_form
     protected $type = "multichoice";
 
     public function definition()
-	{
-		global $OUTPUT;
+    {
+        global $OUTPUT;
 
         $item = $this->_customdata['item'];
         $common = $this->_customdata['common'];
@@ -33,24 +33,47 @@ class apply_multichoice_form extends apply_item_form
 
         $mform->addElement('header', 'general', get_string($this->type, 'apply'));
         $mform->addElement('advcheckbox', 'required', get_string('required', 'apply'), '' , null , array(0, 1));
+        $mform->setType('required', PARAM_INT);
+
         $mform->addElement('text', 'name',  get_string('item_name',  'apply'), array('size'=>APPLY_ITEM_NAME_TEXTBOX_SIZE,  'maxlength'=>255));
-		$label_help = ' '.$OUTPUT->help_icon('item_label', 'apply');
-        $mform->addElement('text', 'label', get_string('item_label', 'apply').$label_help, array('size'=>APPLY_ITEM_LABEL_TEXTBOX_SIZE, 'maxlength'=>255));
+        $mform->addElement('text', 'label', get_string('item_label', 'apply'), array('size'=>APPLY_ITEM_LABEL_TEXTBOX_SIZE, 'maxlength'=>255));
+        $mform->addHelpButton('label', 'item_label', 'apply');
+        $mform->setType('label', PARAM_TEXT);
+
         $params = array(0=>get_string('vertical', 'apply'), 1=>get_string('horizontal', 'apply'));
-        $mform->addElement('select', 'horizontal', get_string('adjustment', 'apply').'&nbsp;', $params);
+        $mform->addElement('select', 'horizontal', get_string('adjustment', 'apply'), $params);
+        $mform->setType('horizontal', PARAM_INT);
+
         $params = array('r'=>get_string('radio', 'apply'), 'c'=>get_string('check', 'apply'), 'd'=>get_string('dropdown', 'apply'));
-        $mform->addElement('select', 'subtype', get_string('multichoicetype', 'apply').'&nbsp;', $params);
+        $mform->addElement('select', 'subtype', get_string('multichoicetype', 'apply'), $params);
+        $mform->setType('subtype', PARAM_ALPHA);
+
         $mform->addElement('selectyesno', 'ignoreempty', get_string('do_not_analyse_empty_submits', 'apply'));
+        $mform->setType('ignoreempty', PARAM_INT);
+
         $mform->addElement('selectyesno', 'hidenoselect', get_string('hide_no_select_option', 'apply'));
+        $mform->setType('hidenoselect', PARAM_INT);
+
         $mform->addElement('static', 'hint', get_string('multichoice_values', 'apply'), get_string('use_one_line_for_each_value', 'apply'));
         $mform->addElement('textarea', 'values', '', 'wrap="virtual" rows="10" cols="65"');
+
+        $mform->addElement('text', 'outside_style',  get_string('outside_style', 'apply'), array('size'=>APPLY_ITEM_STYLE_TEXTBOX_SIZE, 'maxlength'=>255));
+        $mform->addHelpButton('outside_style', 'outside_style', 'apply');
+        $mform->setDefault('outside_style', get_string('outside_style_default', 'apply'));
+        $mform->setType('outside_style', PARAM_TEXT);
+
+        $mform->addElement('text', 'item_style',  get_string('item_style', 'apply'), array('size'=>APPLY_ITEM_STYLE_TEXTBOX_SIZE, 'maxlength'=>255));
+        $mform->addHelpButton('item_style', 'item_style', 'apply');
+        $mform->setDefault('item_style', get_string('item_style_default', 'apply'));
+        $mform->setType('item_style', PARAM_TEXT);
 
         parent::definition();
         $this->set_data($item);
     }
 
+
     public function set_data($item)
-	{
+    {
         $info = $this->_customdata['info'];
 
         $item->horizontal = $info->horizontal;
@@ -63,8 +86,9 @@ class apply_multichoice_form extends apply_item_form
         return parent::set_data($item);
     }
 
+
     public function get_data()
-	{
+    {
         if (!$item = parent::get_data()) {
             return false;
         }
@@ -73,14 +97,16 @@ class apply_multichoice_form extends apply_item_form
         if (!isset($item->subtype)) {
             $subtype = 'r';
         }
-		else {
+        else {
             $subtype = substr($item->subtype, 0, 1);
         }
         if (isset($item->horizontal) AND $item->horizontal == 1 AND $subtype != 'd') {
             $presentation .= APPLY_MULTICHOICE_ADJUST_SEP.'1';
         }
 
-        $item->presentation = $subtype.APPLY_MULTICHOICE_TYPE_SEP.$presentation;
+        $item->presentation = $subtype.APPLY_MULTICHOICE_TYPE_SEP.$presentation.
+                                       APPLY_MULTICHOICE_STYLE_FIELD_SEP.$item->outside_style.
+                                       APPLY_MULTICHOICE_STYLE_SEP.$item->item_style;
         return $item;
     }
 }

@@ -48,8 +48,8 @@ class apply_edit_add_question_form extends moodleform
         $mform->addElement('hidden', 'position');
         $mform->setType('position', PARAM_INT);
 
-        // buttons
-        $mform->addElement('submit', 'add_item', get_string('add_item', 'apply'));
+        // buttons ボタンが無くとも移動する
+        //$mform->addElement('submit', 'add_item', get_string('add_item', 'apply'));
     }
 }
 
@@ -59,7 +59,7 @@ class apply_edit_use_template_form extends moodleform
     private $applydata;
 
     public function definition()
-	{
+    {
         $this->applydata = new stdClass();
         //this function can not be called, because not all data are available at this time
         //I use set_form_elements instead
@@ -83,7 +83,7 @@ class apply_edit_use_template_form extends moodleform
     //this function have to be called manually
     //the advantage is that the data are already set
     public function set_form_elements()
-	{
+    {
         $mform =& $this->_form;
 
         $elementgroup = array();
@@ -124,7 +124,7 @@ class apply_edit_use_template_form extends moodleform
             $elementgroup[] = $mform->createElement('submit', 'use_template', get_string('use_this_template', 'apply')); 
             $mform->addGroup($elementgroup, 'elementgroup', '', array(' '), false);
         }
-		else {
+        else {
             $mform->addElement('static', 'info', get_string('no_templates_available_yet', 'apply'));
         }
     }
@@ -137,16 +137,16 @@ class apply_edit_create_template_form extends moodleform
     private $applydata;
 
     public function definition()
-	{
+    {
     }
 
     public function data_preprocessing(&$default_values)
-	{
+    {
         $default_values['templatename'] = '';
     }
 
     public function set_applydata($data)
-	{
+    {
         if (is_array($data)) {
             if (!isset($this->applydata)) {
                 $this->applydata = new stdClass();
@@ -158,7 +158,7 @@ class apply_edit_create_template_form extends moodleform
     }
 
     public function set_form_elements()
-	{ 
+    { 
         $mform =& $this->_form;
 
         // hidden elements

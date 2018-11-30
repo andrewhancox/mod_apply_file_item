@@ -16,37 +16,25 @@
 
 require_once($CFG->dirroot.'/mod/apply/item/apply_item_form_class.php');
 
-class apply_label_form extends apply_item_form
+class apply_fixedtitle_form extends apply_item_form
 {
-    protected $type = "label";
-    private $area;
+    protected $type = "fixedtitle";
 
     public function definition()
     {
-        global $CFG, $OUTPUT;
+        global $OUTPUT;
 
         $item = $this->_customdata['item'];
         $common = $this->_customdata['common'];
-        $presentationoptions = $this->_customdata['presentationoptions'];
         $positionlist = $this->_customdata['positionlist'];
         $position = $this->_customdata['position'];
 
         $mform =& $this->_form;
+
         $mform->addElement('header', 'general', get_string($this->type, 'apply'));
-
-        $mform->addElement('hidden', 'required', 0);
-        $mform->setType('required', PARAM_INT);
-
-        //$mform->addElement('hidden', 'name', 'label');
-        //$mform->setType('template', PARAM_TEXT);
-
-        $mform->addElement('text', 'name',  get_string('item_name',  'apply'), array('size'=>APPLY_ITEM_NAME_TEXTBOX_SIZE, 'maxlength'=>255));
-        $mform->addElement('text', 'label', get_string('item_label', 'apply'), array('size'=>APPLY_ITEM_LABEL_TEXTBOX_SIZE,'maxlength'=>255));
-        $mform->addHelpButton('label', 'item_label', 'apply');
+        $mform->addElement('text', 'name',  get_string('item_name', 'apply'), array('size'=>APPLY_ITEM_NAME_TEXTBOX_SIZE, 'maxlength'=>255));
+        $mform->addElement('text', 'label', get_string('item_label','apply'), array('size'=>APPLY_ITEM_LABEL_TEXTBOX_SIZE,'maxlength'=>255));
         $mform->setType('label', PARAM_TEXT);
-
-        $mform->addElement('editor', 'presentation_editor', '', null, $presentationoptions);
-        $mform->setType('presentation_editor', PARAM_RAW);
 
         parent::definition();
         $this->set_data($item);

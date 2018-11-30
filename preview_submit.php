@@ -15,34 +15,32 @@
 // along with Moodle.  If not, see <http://www.gnu.org/licenses/>.
 
 /**
- * print a printview of apply-items
+ * prints the form so the user can fill out the apply
  *
- * @author Fumi Iseki
- * @license http://www.gnu.org/copyleft/gpl.html GNU Public License
- * @package mod_apply (modified from mod_feedback that by Andreas Grabs)
+ * @package apply
+ * @author  Fumi.Iseki
+ * @license GNU Public License
+ * @attention modified from mod_feedback that by Andreas Grabs
  */
 
 require_once('../../config.php');
 require_once(dirname(__FILE__).'/locallib.php');
 
-$id         = required_param('id', PARAM_INT);
-$courseid   = optional_param('courseid', false, PARAM_INT);
-$user_id    = optional_param('user_id', 0, PARAM_INT);
-$submit_id  = optional_param('submit_id', 0, PARAM_INT);
-$submit_ver = optional_param('submit_ver', -1, PARAM_INT);
 
-$this_action = 'preview';
+$id          = required_param('id', PARAM_INT);
+$courseid    = optional_param('courseid', 0, PARAM_INT);
+$this_action = 'preview_submit';
 
 
-////////////////////////////////////////////////////////
-//get the objects
+///////////////////////////////////////////////////////////////////////////
+//
 if (! $cm = get_coursemodule_from_id('apply', $id)) {
     print_error('invalidcoursemodule');
 }
-if (! $course = $DB->get_record('course', array("id"=>$cm->course))) {
+if (! $course = $DB->get_record('course', array('id'=>$cm->course))) {
     print_error('coursemisconf');
 }
-if (! $apply = $DB->get_record('apply', array("id"=>$cm->instance))) {
+if (! $apply  = $DB->get_record('apply', array('id'=>$cm->instance))) {
     print_error('invalidcoursemodule');
 }
 if (!$courseid) $courseid = $course->id;
@@ -50,10 +48,14 @@ if (!$courseid) $courseid = $course->id;
 $context = context_module::instance($cm->id);
 
 
-////////////////////////////////////////////////////////
-// Check
+///////////////////////////////////////////////////////////////////////////
+// Check 1
 require_login($course, true, $cm);
-require_capability('mod/apply:view', $context);
+//
+//if (!has_capability('mod/apply:submit', $context)) {
+//    apply_print_error_messagebox('apply_is_disable', $id);
+//    exit;
+//}
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -61,7 +63,6 @@ require_capability('mod/apply:view', $context);
 $base_url = new moodle_url('/mod/apply/'.$this_action.'.php');
 $base_url->params(array('id'=>$cm->id, 'courseid'=>$courseid));
 $this_url = new moodle_url($base_url);
-$this_url->params(array('submit_id'=>$submit_id, 'submit_ver'=>$submit_ver));
 
 $PAGE->navbar->add(get_string('apply:'.$this_action, 'apply'));
 $PAGE->set_url($this_url);
@@ -71,19 +72,22 @@ $PAGE->set_heading(format_string($course->fullname));
 
 echo $OUTPUT->header();
 echo '<div align="center">';
+echo '<h3>'.get_string('apply:preview_submit', 'apply').'</h3><hr />';
 echo $OUTPUT->heading(format_text($apply->name), 3);
 echo '</div>';
 
 
 ///////////////////////////////////////////////////////////////////////////
+// Check 2
+if ((empty($cm->visible) and !has_capability('moodle/course:viewhiddenactivities', $context))) {
+    notice(get_string('activityiscurrentlyhidden'));
+}
 
-$submit = $DB->get_record('apply_submit', array('id'=>$submit_id, 'user_id'=>$user_id));
-if ($submit) {
-    $items = $DB->get_records('apply_item', array('apply_id'=>$submit->apply_id), 'position');
-    if (is_array($items)) {
-        if ($submit_ver==-1 and apply_exist_draft_values($submit->id)) $submit_ver = 0;
-        require('entry_view.php');
-    }
+
+///////////////////////////////////////////////////////////////////////////
+$items  = $DB->get_records_select('apply_item', 'apply_id=?', array($apply->id), 'position');
+if (is_array($items)) {
+    require('preview_submit_page.php');
 }
 
 

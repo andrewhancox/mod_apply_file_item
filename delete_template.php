@@ -28,11 +28,11 @@ require_once(dirname(__FILE__).'/delete_template_form.php');
 require_once($CFG->libdir.'/tablelib.php');
 
 
-$id 		   = required_param('id', PARAM_INT);
+$id            = required_param('id', PARAM_INT);
 $cancel_delete = optional_param('cancel_delete', 0, PARAM_INT);
 $should_delete = optional_param('should_delete', 0, PARAM_INT);
 $delete_templ  = optional_param('delete_templ',  0, PARAM_INT);
-$courseid 	   = optional_param('courseid', 	 0, PARAM_INT);
+$courseid      = optional_param('courseid',      0, PARAM_INT);
 
 $current_tab = 'templates';
 $this_action = 'delete_template';
@@ -148,7 +148,7 @@ else {
         echo $OUTPUT->box(get_string('no_templates_available_yet', 'apply'), 'generalbox boxaligncenter');
         echo $OUTPUT->box(get_string('no_templates_available_yet', 'apply'), 'generalbox boxaligncenter boxwidthwide');
     }
-	else {
+    else {
         echo $OUTPUT->heading(get_string('course'), 4);
         echo $OUTPUT->box_start('generalbox boxaligncenter boxwidthnormal');
         $tablecolumns = array('template', 'action');
@@ -184,7 +184,7 @@ else {
         if (!is_array($templates)) {
             echo $OUTPUT->box(get_string('no_templates_available_yet', 'apply'), 'generalbox boxaligncenter');
         }
-		else {
+        else {
             echo $OUTPUT->heading(get_string('public', 'apply'), 4);
             echo $OUTPUT->box_start('generalbox boxaligncenter boxwidthnormal');
             $tablecolumns = array('template', 'action');

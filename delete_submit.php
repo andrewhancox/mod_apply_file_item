@@ -27,11 +27,11 @@ require_once(dirname(__FILE__).'/delete_submit_form.php');
 require_once(dirname(__FILE__).'/jbxl/jbxl_moodle_tools.php');
 require_once(dirname(__FILE__).'/locallib.php');
 
-$id 		= required_param('id', PARAM_INT);
-$submit_id 	= required_param('submit_id', PARAM_INT);
+$id         = required_param('id', PARAM_INT);
+$submit_id  = required_param('submit_id', PARAM_INT);
 $submit_ver = optional_param('submit_ver', -1, PARAM_INT);
-$courseid 	= optional_param('courseid', false, PARAM_INT);
-$action 	= optional_param('action', '', PARAM_ALPHAEXT);
+$courseid   = optional_param('courseid', false, PARAM_INT);
+$action     = optional_param('action', '', PARAM_ALPHAEXT);
 
 $urlparams['id']       = $id;
 $urlparams['courseid'] = $courseid;
@@ -39,7 +39,7 @@ $urlparams['action']   = $action;
 
 
 if (!confirm_sesskey()) {
-	print_error('invalidsesskey');
+    print_error('invalidsesskey');
 }
 
 //
@@ -74,7 +74,7 @@ require_login($course, true, $cm);
 $context = context_module::instance($cm->id);
 
 if ($USER->id!=$submit->user_id) {
-	require_capability('mod/apply:deletesubmissions', $context);
+    require_capability('mod/apply:deletesubmissions', $context);
 }
 
 
@@ -86,46 +86,46 @@ $mform->set_data($newformdata);
 $formdata = $mform->get_data();
 
 if ($mform->is_cancelled()) {
-	redirect('view.php?id='.$id.'&do_show=view');
+    redirect('view.php?id='.$id.'&do_show=view');
 }
 
 
 // Discard
 if (isset($formdata->confirmdelete) and $formdata->confirmdelete==1) {
     if ($submit = $DB->get_record('apply_submit', array('id'=>$submit_id))) {
-		//
-		if (isset($formdata->action) and $formdata->action=='delete_submit' and $apply->enable_deletemode) {
-			// 任意の申請を削除
-			require_capability('mod/apply:deletesubmissions', $context);
-        	apply_delete_submit($submit_id);
-			$event = apply_get_event($cm, 'delete', $urlparams, 'delete_submit');
-			jbxl_add_to_log($event);
-        	redirect('view_entries.php?id='.$id.'&do_show=view_entries');
-		}
-		//
-		else {
-			$log_url = 'delete_submit.php?id='.$cm->id.'&submit_id='.$submit_id.'&submit_ver='.$submit_ver;
-			if ($submit->version<=1 and $submit->acked!=APPLY_ACKED_ACCEPT) {
-				// 全体を削除可能
-        		apply_delete_submit_safe($submit_id);
-				$event = apply_get_event($cm, 'delete', $urlparams, 'delete');
-				jbxl_add_to_log($event);
-			}
-			else if ($submit->acked!=APPLY_ACKED_ACCEPT) {
-				// 最新の申請（未認証）のみ取消可能（ロールバック）
-        		apply_rollback_submit($submit_id);
-				$event = apply_get_event($cm, 'delete', $urlparams, 'rollback');
-				jbxl_add_to_log($event);
-			}
-			else {
-				// 申請の解除
-        		apply_cancel_submit($submit_id);
-				$event = apply_get_event($cm, 'delete', $urlparams, 'cancel');
-				jbxl_add_to_log($event);
-			}
-			//
-        	redirect('view.php?id='.$id.'&do_show=view');
-		}
+        //
+        if (isset($formdata->action) and $formdata->action=='delete_submit' and $apply->enable_deletemode) {
+            // 任意の申請を削除
+            require_capability('mod/apply:deletesubmissions', $context);
+            apply_delete_submit($submit_id);
+            $event = apply_get_event($cm, 'delete', $urlparams, 'delete_submit');
+            jbxl_add_to_log($event);
+            redirect('view_entries.php?id='.$id.'&do_show=view_entries');
+        }
+        //
+        else {
+            $log_url = 'delete_submit.php?id='.$cm->id.'&submit_id='.$submit_id.'&submit_ver='.$submit_ver;
+            if ($submit->version<=1 and $submit->acked!=APPLY_ACKED_ACCEPT) {
+                // 全体を削除可能
+                apply_delete_submit_safe($submit_id);
+                $event = apply_get_event($cm, 'delete', $urlparams, 'delete');
+                jbxl_add_to_log($event);
+            }
+            else if ($submit->acked!=APPLY_ACKED_ACCEPT) {
+                // 最新の申請（未認証）のみ取消可能（ロールバック）
+                apply_rollback_submit($submit_id);
+                $event = apply_get_event($cm, 'delete', $urlparams, 'rollback');
+                jbxl_add_to_log($event);
+            }
+            else {
+                // 申請の解除
+                apply_cancel_submit($submit_id);
+                $event = apply_get_event($cm, 'delete', $urlparams, 'cancel');
+                jbxl_add_to_log($event);
+            }
+            //
+            redirect('view.php?id='.$id.'&do_show=view');
+        }
     }
 }
 
@@ -137,24 +137,24 @@ $strapply  = get_string('modulename', 'apply');
 
 
 if ($action=='delete_submit' and $apply->enable_deletemode) {
-	// 任意の申請を削除
-	require_capability('mod/apply:deletesubmissions', $context);
-	$PAGE->navbar->add(get_string('delete_submit', 'apply'));
+    // 任意の申請を削除
+    require_capability('mod/apply:deletesubmissions', $context);
+    $PAGE->navbar->add(get_string('delete_submit', 'apply'));
 }
 //
 else {
-	if ($submit->version<=1 and $submit->acked!=APPLY_ACKED_ACCEPT) {
-		// 全体を削除可能
-		$PAGE->navbar->add(get_string('delete_entry', 'apply'));
-	}
-	else if ($submit->acked!=APPLY_ACKED_ACCEPT) {
-		// 最新の申請（未認証）のみ取消可能（ロールバック）
-		$PAGE->navbar->add(get_string('rollback_entry', 'apply'));
-	}
-	else {
-		// 申請の解除
-		$PAGE->navbar->add(get_string('cancel_entry', 'apply'));
-	}
+    if ($submit->version<=1 and $submit->acked!=APPLY_ACKED_ACCEPT) {
+        // 全体を削除可能
+        $PAGE->navbar->add(get_string('delete_entry', 'apply'));
+    }
+    else if ($submit->acked!=APPLY_ACKED_ACCEPT) {
+        // 最新の申請（未認証）のみ取消可能（ロールバック）
+        $PAGE->navbar->add(get_string('rollback_entry', 'apply'));
+    }
+    else {
+        // 申請の解除
+        $PAGE->navbar->add(get_string('cancel_entry', 'apply'));
+    }
 }
 
 
@@ -173,33 +173,33 @@ echo $OUTPUT->box_start('generalbox errorboxcontent boxaligncenter boxwidthnorma
 
 //
 if ($action=='delete_submit' and $apply->enable_deletemode) {
-	// 任意の申請を削除
-	require_capability('mod/apply:deletesubmissions', $context);
-	$user_name = jbxl_get_user_name($submit->user_id, $apply->name_pattern);
-	echo $OUTPUT->heading(get_string('confirm_delete_submit', 'apply'), 4);
-	echo '<br />';
-	echo $OUTPUT->heading($user_name.'&nbsp;:&nbsp;'.$submit->title, 4);
+    // 任意の申請を削除
+    require_capability('mod/apply:deletesubmissions', $context);
+    $user_name = jbxl_get_user_name($submit->user_id, $apply->name_pattern);
+    echo $OUTPUT->heading(get_string('confirm_delete_submit', 'apply'), 4);
+    echo '<br />';
+    echo $OUTPUT->heading($user_name.'&nbsp;:&nbsp;'.$submit->title, 4);
 }
 //
 else {
-	if ($submit->version<=1 and $submit->acked!=APPLY_ACKED_ACCEPT) {
-		// 全体を削除可能
-		echo $OUTPUT->heading(get_string('confirm_delete_entry', 'apply'), 4);
-		echo '<br />';
-		echo $OUTPUT->heading($submit->title, 4);
-	}
-	else if ($submit->acked!=APPLY_ACKED_ACCEPT) {
-		// 最新の申請（未認証）のみ取消可能（ロールバック）
-		echo $OUTPUT->heading(get_string('confirm_rollback_entry', 'apply'), 4);
-		echo '<br />';
-		echo $OUTPUT->heading($submit->title, 4);
-	}
-	else {
-		// 申請の解除
-		echo $OUTPUT->heading(get_string('confirm_cancel_entry', 'apply'), 4);
-		echo '<br />';
-		echo $OUTPUT->heading($submit->title, 4);
-	}
+    if ($submit->version<=1 and $submit->acked!=APPLY_ACKED_ACCEPT) {
+        // 全体を削除可能
+        echo $OUTPUT->heading(get_string('confirm_delete_entry', 'apply'), 4);
+        echo '<br />';
+        echo $OUTPUT->heading($submit->title, 4);
+    }
+    else if ($submit->acked!=APPLY_ACKED_ACCEPT) {
+        // 最新の申請（未認証）のみ取消可能（ロールバック）
+        echo $OUTPUT->heading(get_string('confirm_rollback_entry', 'apply'), 4);
+        echo '<br />';
+        echo $OUTPUT->heading($submit->title, 4);
+    }
+    else {
+        // 申請の解除
+        echo $OUTPUT->heading(get_string('confirm_cancel_entry', 'apply'), 4);
+        echo '<br />';
+        echo $OUTPUT->heading($submit->title, 4);
+    }
 }
 
 //

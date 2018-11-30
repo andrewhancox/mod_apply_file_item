@@ -8,33 +8,33 @@
 }
 
 div.missingrequire {
-	background:#FFAAAA;
+    background:#FFAAAA;
 }
 
 div.entry_view {
 }
 
 span.apply_info {
-	font-weight:bold;
+    font-weight:bold;
 }
 
 table.entry_info {
-	line-height: 100%;
-	font-weight:bold;
+    line-height: 100%;
+    font-weight:bold;
 }
 
 table.operation_submit {
-	line-height: 100%;
-	font-weight:bold;
+    line-height: 100%;
+    font-weight:bold;
 }
 
 
 div.apply_item_label_left {
-	font-weight:bold;
+    font-weight:bold;
 }
 
 div.apply_item_label_right {
-	font-weight:bold;
+    font-weight:bold;
 }
 
 
@@ -43,27 +43,27 @@ div.apply_info {
 }
 
 div.apply_print_item {
-	padding:5px 0 15px 0;
+    padding: 0px 0 0px 0;
 }
 
 div.error{
     color: #FF0000;
-	font-size:18px;
-	font-weight:bold;
+    font-size:18px;
+    font-weight:bold;
 }
 
 
 /* */
 div.apply_depend {
-	background:#DDDDDD;
+    background:#DDDDDD;
 }
 
 div.apply_submit_depend {
-	background:#EEEEEE;
+    background:#EEEEEE;
 }
 
 span.apply_depend {
-	color:#ff0000;
+    color:#ff0000;
 }
 
 
@@ -76,21 +76,21 @@ div.apply_item_box_left, div.apply_item_box_right {
 }
 
 div.apply_item_number_left, div.apply_item_left {
-	float:left;
+    float:left;
 }
 
 div.apply_item_number_right, div.apply_item_right {
-	float:right;
+    float:right;
 }
 
 div.apply_item_commands_left {
-	float:right;
-	text-align:right;
+    float:right;
+    text-align:right;
 }
 
 div.apply_item_commands_right {
-	float:left;
-	text-align:left;
+    float:left;
+    text-align:left;
 }
 
 li.apply_item_check_h_left,
@@ -99,8 +99,8 @@ li.apply_item_select_h_left,
 li.apply_item_select_h_right,
 li.apply_item_radio_h_left,
 li.apply_item_radio_h_right{
-	list-style-type:none;
-	display:inline;
+    list-style-type:none;
+    display:inline;
 }
 
 li.apply_item_check_v_left,
@@ -109,31 +109,31 @@ li.apply_item_select_v_left,
 li.apply_item_select_v_right,
 li.apply_item_radio_v_left,
 li.apply_item_radio_v_right{
-	list-style-type:none;
-	display:block;
+    list-style-type:none;
+    display:block;
 }
 
 div.apply_item_captcha_text_left,
 div.apply_item_captcha_img_left {
-	display:inline;
-	margin: 5px;
+    display:inline;
+    margin: 5px;
 }
 
 div.apply_item_captcha_text_right,
 div.apply_item_captcha_img_right {
-	display:inline;
-	margin: 5px;
+    display:inline;
+    margin: 5px;
 }
 
 label {
-	display: inherit;
+    display: inherit;
 }
 
 
 /* */
 hr.apply_pagebreak {
-	height:8px;
-	color:#aaaaaa;
-	background-color:#aaaaaa;
-	border:0px;
+    height:8px;
+    color:#aaaaaa;
+    background-color:#aaaaaa;
+    border:0px;
 }

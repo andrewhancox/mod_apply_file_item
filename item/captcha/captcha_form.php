@@ -21,8 +21,8 @@ class apply_captcha_form extends apply_item_form
     protected $type = "captcha";
 
     public function definition()
-	{
-		global $OUTPUT;
+    {
+        global $OUTPUT;
 
         $item = $this->_customdata['item'];
         $common = $this->_customdata['common'];

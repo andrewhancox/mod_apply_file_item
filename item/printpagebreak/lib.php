@@ -19,20 +19,16 @@ require_once($CFG->dirroot.'/mod/apply/item/apply_item_class.php');
 require_once($CFG->libdir.'/formslib.php');
 
 
-class apply_item_label extends apply_item_base
+class apply_item_printpagebreak extends apply_item_base
 {
-    protected $type = "label";
-    private $presentationoptions = null;
+    protected $type = "printpagebreak";
     private $commonparams;
     private $item_form;
-    private $context;
     private $item;
 
 
     public function init()
     {
-        global $CFG;
-        $this->presentationoptions = array('maxfiles' => EDITOR_UNLIMITED_FILES, 'trusttext'=>true);
     }
 
 
@@ -40,7 +36,7 @@ class apply_item_label extends apply_item_base
     {
         global $DB, $CFG;
 
-        require_once('label_form.php');
+        require_once('printpagebreak_form.php');
 
         //get the lastposition number of the apply_items
         $position = $item->position;
@@ -57,6 +53,14 @@ class apply_item_label extends apply_item_base
         //the elements for position dropdownlist
         $positionlist = array_slice(range(0, $i_formselect_last), 1, $i_formselect_last, true);
 
+        if (!property_exists($item, 'label')) $item->label = '';
+        if (!property_exists($item, 'name'))  $item->name  = '';
+        if ($item->label=='') $item->label = 'print_page_break';
+        if ($item->name=='' ) $item->name  = get_string('pagebreak_title','apply');
+
+        $pagebreak_style = isset($item->presentation) ? $item->presentation: get_string('pagebreak_style_default', 'apply');
+        $item->pagebreak_style = $pagebreak_style;
+
         //all items for dependitem
         $applyitems = apply_get_depend_candidates_for_item($apply, $item);
         $commonparams = array('cmid'=>$cm->id,
@@ -64,29 +68,13 @@ class apply_item_label extends apply_item_base
                              'typ'=>$item->typ,
                              'items'=>$applyitems,
                              'apply_id'=>$apply->id);
-        $this->context = context_module::instance($cm->id);
-
-        //preparing the editor for new file-api
-        $item->presentationformat = FORMAT_HTML;
-        $item->presentationtrust = 1;
-
-        // Append editor context to presentation options, giving preference to existing context.
-        $this->presentationoptions = array_merge(array('context' => $this->context),
-                                                 $this->presentationoptions);
-        $item = file_prepare_standard_editor($item,
-                                            'presentation', //name of the form element
-                                            $this->presentationoptions,
-                                            $this->context,
-                                            'mod_apply',
-                                            'item', //the filearea
-                                            $item->id);
         //build the form
         $customdata = array('item' => $item,
                             'common' => $commonparams,
                             'positionlist' => $positionlist,
-                            'position' => $position,
-                            'presentationoptions' => $this->presentationoptions);
-        $this->item_form = new apply_label_form('edit_item.php', $customdata);
+                            'position' => $position);
+
+        $this->item_form = new apply_printpagebreak_form('edit_item.php', $customdata);
     }
 
 
@@ -125,8 +113,6 @@ class apply_item_label extends apply_item_base
             $item->position++;
         }
 
-        $item->presentation = '';
-
         $item->hasvalue = $this->get_hasvalue();
         if (!$item->id) {
             $item->id = $DB->insert_record('apply_item', $item);
@@ -135,55 +121,7 @@ class apply_item_label extends apply_item_base
             $DB->update_record('apply_item', $item);
         }
 
-        $item = file_postupdate_standard_editor($item,
-                                                'presentation',
-                                                $this->presentationoptions,
-                                                $this->context,
-                                                'mod_apply',
-                                                'item',
-                                                $item->id);
-
-        $DB->update_record('apply_item', $item);
-
         return $DB->get_record('apply_item', array('id'=>$item->id));
-    }
-
-
-    public function print_item($item)
-    {
-        global $DB, $CFG;
-
-        require_once($CFG->libdir . '/filelib.php');
-
-        //is the item a template?
-        if (!$item->apply_id AND $item->template) {
-            $template = $DB->get_record('apply_template', array('id'=>$item->template));
-            if ($template->ispublic) {
-                $context = get_system_context();
-            }
-            else {
-                $context = context_course::instance($template->course);
-            }
-            $filearea = 'template';
-        }
-        else {
-            $cm = get_coursemodule_from_instance('apply', $item->apply_id);
-            $context = context_module::instance($cm->id);
-            $filearea = 'item';
-        }
-
-        $item->presentationformat = FORMAT_HTML;
-        $item->presentationtrust = 1;
-
-        $output = file_rewrite_pluginfile_urls($item->presentation,
-                                               'pluginfile.php',
-                                               $context->id,
-                                               'mod_apply',
-                                               $filearea,
-                                               $item->id);
-
-        $formatoptions = array('overflowdiv'=>true, 'trusted'=>$CFG->enabletrusttext);
-        echo format_text($output, FORMAT_HTML, $formatoptions);
     }
 
 
@@ -196,17 +134,18 @@ class apply_item_label extends apply_item_base
      */
     public function print_item_preview($item)
     {
-        global $OUTPUT, $DB;
+        global $DB;
+
+        $pagebreak_style = isset($item->presentation) ? $item->presentation: get_string('pagebreak_style_default', 'apply');
+        $item->pagebreak_style = $pagebreak_style;
 
         $align = right_to_left() ? 'right' : 'left';
-
-        $item->outside_style = '';
-        $item->item_style = '';
 
         $output  = '';
         $output .= '<div class="apply_item_label_'.$align.'">';
         $output .= '('.$item->label.') ';
         $output .= format_text($item->name, true, false, false).' ['.$item->position.']';
+
         if ($item->dependitem) {
             if ($dependitem = $DB->get_record('apply_item', array('id'=>$item->dependitem))) {
                 $output .= ' <span class="apply_depend">';
@@ -217,11 +156,8 @@ class apply_item_label extends apply_item_base
         $output .= '</div>';
 
         apply_open_table_item_tag($output, true);
-        echo $OUTPUT->box_start('generalbox boxalign'.$align);
-        apply_item_box_start($item);
-        $this->print_item($item);
-        apply_item_box_end();
-        echo $OUTPUT->box_end();
+        if ($item->pagebreak_style!='') echo '<hr style="border: '.$item->pagebreak_style.'" />';
+        else echo ' ';
         apply_close_table_item_tag();
     }
 
@@ -237,20 +173,10 @@ class apply_item_label extends apply_item_base
      */
     public function print_item_submit($item, $value = '', $highlightrequire = false)
     {
-        global $OUTPUT;
+        global $Table_in;
 
-        $item->outside_style = '';
-        $item->item_style = '';
-
-        $align  = right_to_left() ? 'right' : 'left';
-        $output = format_text($item->name, true, false, false);
-
-        apply_open_table_item_tag($output);
-        echo $OUTPUT->box_start('generalbox boxalign'.$align);
-        apply_item_box_start($item);
-        $this->print_item($item);
-        apply_item_box_end();
-        echo $OUTPUT->box_end();
+        apply_open_table_item_tag('');
+        if ($Table_in) echo ' ';
         apply_close_table_item_tag();
     }
 
@@ -265,20 +191,20 @@ class apply_item_label extends apply_item_base
      */
     public function print_item_show_value($item, $value = '')
     {
-        global $OUTPUT;
+        global $Table_in;
 
-        $item->outside_style = '';
-        $item->item_style = '';
+        $pagebreak_style = isset($item->presentation) ? $item->presentation: get_string('pagebreak_style_default', 'apply');
+        $item->pagebreak_style = $pagebreak_style;
 
         $align  = right_to_left() ? 'right' : 'left';
-        $output = format_text($item->name, true, false, false);
+        $output = '<br />'.format_text($item->name, true, false, false);
 
         apply_open_table_item_tag($output);
-        echo $OUTPUT->box_start('generalbox boxalign'.$align);
-        apply_item_box_start($item);
-        $this->print_item($item);
-        apply_item_box_end();
-        echo $OUTPUT->box_end();
+        if (!$Table_in) {
+            if ($item->pagebreak_style!='') echo '<hr style="border: '.$item->pagebreak_style.'" />';
+            echo '<span style="page-break-after: always;"></span>';
+        }
+        else echo ' ';
         apply_close_table_item_tag();
     }
 
@@ -297,26 +223,10 @@ class apply_item_label extends apply_item_base
 
     public function get_presentation($data)
     {
+        return $data->pagebreak_style;
     }
 
    
-     public function postupdate($item) 
-     {
-        global $DB;
-
-        $context = context_module::instance($item->cmid);
-        $item = file_postupdate_standard_editor($item,
-                                                'presentation',
-                                                $this->presentationoptions,
-                                                $context,
-                                                'mod_apply',
-                                                'item',
-                                                $item->id);
-        $DB->update_record('apply_item', $item);
-        return $item->id;
-    }
-
-
     public function get_hasvalue()
     {
         return 0;
@@ -341,6 +251,7 @@ class apply_item_label extends apply_item_base
                              $groupid,
                              $courseid = false)
     {
+        return $row_offset;
     }
 
 
@@ -361,12 +272,11 @@ class apply_item_label extends apply_item_base
 
     public function value_type()
     {
-        return PARAM_BOOL;
     }
 
 
     public function clean_input_value($value)
     {
-        return '';
+        return $value;
     }
 }

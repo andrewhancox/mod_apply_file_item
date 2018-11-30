@@ -31,17 +31,17 @@
 class restore_apply_activity_structure_step extends restore_activity_structure_step
 {
     protected function define_structure()
-	{
+    {
         $paths = array();
-		$userinfo = $this->get_setting_value('userinfo');
+        $userinfo = $this->get_setting_value('userinfo');
 
         $paths[] = new restore_path_element('apply', '/activity/apply');
         $paths[] = new restore_path_element('apply_item', '/activity/apply/items/item');
 
-		if ($userinfo) {
-        	$paths[] = new restore_path_element('apply_submit', '/activity/apply/submits/submit');
-        	$paths[] = new restore_path_element('apply_value',  '/activity/apply/submits/submit/values/value');
-		}
+        if ($userinfo) {
+            $paths[] = new restore_path_element('apply_submit', '/activity/apply/submits/submit');
+            $paths[] = new restore_path_element('apply_value',  '/activity/apply/submits/submit/values/value');
+        }
 
         // Return the paths wrapped into standard activity structure
         return $this->prepare_activity_structure($paths);
@@ -49,24 +49,24 @@ class restore_apply_activity_structure_step extends restore_activity_structure_s
 
     //
     protected function process_apply($data)
-	{
+    {
         global $DB;
 
         $data = (object)$data;
         $oldid = $data->id;
         $data->course = $this->get_courseid();
 
-		$data->time_open  	 = $this->apply_date_offset($data->time_open);
-		$data->time_close 	 = $this->apply_date_offset($data->time_close);
-		$data->time_modified = $this->apply_date_offset($data->time_modified);
+        $data->time_open     = $this->apply_date_offset($data->time_open);
+        $data->time_close    = $this->apply_date_offset($data->time_close);
+        $data->time_modified = $this->apply_date_offset($data->time_modified);
 
         $newitemid = $DB->insert_record('apply', $data);
         $this->apply_activity_instance($newitemid);
     }
 
-	//
+    //
     protected function process_apply_item($data)
-	{
+    {
         global $DB;
 
         $data = (object)$data;
@@ -79,9 +79,9 @@ class restore_apply_activity_structure_step extends restore_activity_structure_s
         $this->set_mapping('apply_item', $oldid, $newitemid); 
     }
 
-	//
+    //
     protected function process_apply_submit($data) 
-	{
+    {
         global $DB;
 
         $data = (object)$data;
@@ -89,31 +89,31 @@ class restore_apply_activity_structure_step extends restore_activity_structure_s
 
         $data->apply_id = $this->get_new_parentid('apply');
 
-        $user_id 	 = $this->get_mappingid('user', $data->user_id);
+        $user_id     = $this->get_mappingid('user', $data->user_id);
         $acked_user  = $this->get_mappingid('user', $data->acked_user);
         $execd_user  = $this->get_mappingid('user', $data->execd_user);
         $oacked_user = $this->get_mappingid('user', $data->oacked_user);
         $oexecd_user = $this->get_mappingid('user', $data->oexecd_user);
 
-		if ($user_id    !=0) $data->user_id     = $user_id;		// ==0 is means that the user is not member of course
-		if ($acked_user !=0) $data->acked_user  = $acked_user;
+        if ($user_id    !=0) $data->user_id     = $user_id;        // ==0 is means that the user is not member of course
+        if ($acked_user !=0) $data->acked_user  = $acked_user;
         if ($execd_user !=0) $data->execd_user  = $execd_user;
         if ($oacked_user!=0) $data->oacked_user = $oacked_user;
         if ($oexecd_user!=0) $data->oexecd_user = $oexecd_user;
 
-		$data->acked_time  	 = $this->apply_date_offset($data->acked_time);
-		$data->execd_time  	 = $this->apply_date_offset($data->execd_time);
-		$data->oacked_time 	 = $this->apply_date_offset($data->oacked_time);
-		$data->oexecd_time	 = $this->apply_date_offset($data->oexecd_time);
-		$data->time_modified = $this->apply_date_offset($data->time_modified);
+        $data->acked_time    = $this->apply_date_offset($data->acked_time);
+        $data->execd_time    = $this->apply_date_offset($data->execd_time);
+        $data->oacked_time   = $this->apply_date_offset($data->oacked_time);
+        $data->oexecd_time   = $this->apply_date_offset($data->oexecd_time);
+        $data->time_modified = $this->apply_date_offset($data->time_modified);
 
         $newitemid = $DB->insert_record('apply_submit', $data);
         $this->set_mapping('apply_submit', $oldid, $newitemid);
     }
 
-	//
+    //
     protected function process_apply_value($data)
-	{
+    {
         global $DB;
 
         $data = (object)$data;
@@ -121,7 +121,7 @@ class restore_apply_activity_structure_step extends restore_activity_structure_s
 
         $data->submit_id = $this->get_new_parentid('apply_submit');
         $data->item_id   = $this->get_mappingid('apply_item', $data->item_id);
-		$data->time_modified = $this->apply_date_offset($data->time_modified);
+        $data->time_modified = $this->apply_date_offset($data->time_modified);
 
         $newitemid = $DB->insert_record('apply_value', $data);
         $this->set_mapping('apply_value', $oldid, $newitemid);
@@ -129,7 +129,7 @@ class restore_apply_activity_structure_step extends restore_activity_structure_s
 
     //
     protected function after_execute()
-	{
+    {
         // Add apply related files, no need to match by itemname (just internally handled context)
         $this->add_related_files('mod_apply', 'intro', null);
     }

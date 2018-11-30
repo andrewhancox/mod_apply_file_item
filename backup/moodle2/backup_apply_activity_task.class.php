@@ -36,14 +36,14 @@ class backup_apply_activity_task extends backup_activity_task
      * No specific settings for this activity
      */
     protected function define_my_settings()
-	{
+    {
     }
 
     /**
      * Defines a backup step to store the instance data in the apply.xml file
      */
     protected function define_my_steps()
-	{
+    {
         $this->add_step(new backup_apply_activity_structure_step('apply_structure', 'apply.xml'));
     }
 
@@ -54,7 +54,7 @@ class backup_apply_activity_task extends backup_activity_task
      * @return string the same content with no changes
      */
     static public function encode_content_links($content)
-	{
+    {
         return $content;
     }
 }

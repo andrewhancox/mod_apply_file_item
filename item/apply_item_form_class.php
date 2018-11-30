@@ -16,13 +16,14 @@
 
 require_once($CFG->libdir.'/formslib.php');
 
-define('APPLY_ITEM_NAME_TEXTBOX_SIZE',  80);
+define('APPLY_ITEM_NAME_TEXTBOX_SIZE',  40);
 define('APPLY_ITEM_LABEL_TEXTBOX_SIZE', 20);
+define('APPLY_ITEM_STYLE_TEXTBOX_SIZE', 40);
 
 abstract class apply_item_form extends moodleform
 {
     public function definition()
-	{
+    {
         $item = $this->_customdata['item']; //the item object
 
         //common is an array like:
@@ -45,13 +46,15 @@ abstract class apply_item_form extends moodleform
             $mform->addElement('select', 'dependitem', get_string('dependitem', 'apply').'&nbsp;', $common['items']);
             $mform->addHelpButton('dependitem', 'depending', 'apply');
             $mform->addElement('text', 'dependvalue', get_string('dependvalue', 'apply'), array('size'=>APPLY_ITEM_LABEL_TEXTBOX_SIZE,'maxlength'=>255));
-            $mform->setType('dependvalue', PARAM_ALPHA);
+            //$mform->setType('dependvalue', PARAM_ALPHA);
+            $mform->setType('dependvalue', PARAM_TEXT);
         }
-		else {
+        else {
             $mform->addElement('hidden', 'dependitem', 0);
             $mform->setType('dependitem', PARAM_INT);
             $mform->addElement('hidden', 'dependvalue', '');
-            $mform->setType('dependvalue', PARAM_ALPHA);
+            //$mform->setType('dependvalue', PARAM_ALPHA);
+            $mform->setType('dependvalue', PARAM_TEXT);
         }
 
         $position_select = $mform->addElement('select', 'position', get_string('position', 'apply').'&nbsp;', $positionlist);
@@ -86,12 +89,12 @@ abstract class apply_item_form extends moodleform
             $buttonarray[] = &$mform->createElement('submit', 'update_item', get_string('update_item', 'apply'));
             $buttonarray[] = &$mform->createElement('submit', 'clone_item', get_string('save_as_new_item', 'apply'));
         }
-		else {
+        else {
             $mform->addElement('hidden', 'clone_item', 0);
             $mform->setType('clone_item', PARAM_INT);
             $buttonarray[] = &$mform->createElement('submit', 'save_item', get_string('save_item', 'apply'));
         }
-		//
+        //
         $buttonarray[] = &$mform->createElement('cancel');
         $mform->addGroup($buttonarray, 'buttonar', '&nbsp;', array(' '), false);
     }

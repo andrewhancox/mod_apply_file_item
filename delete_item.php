@@ -26,9 +26,9 @@ require_once('../../config.php');
 require_once(dirname(__FILE__).'/locallib.php');
 require_once(dirname(__FILE__).'/delete_item_form.php');
 
-$id 		= required_param('id', PARAM_INT);
+$id         = required_param('id', PARAM_INT);
 $deleteitem = required_param('deleteitem', PARAM_INT);
-$courseid 	= optional_param('courseid', false, PARAM_INT);
+$courseid   = optional_param('courseid', false, PARAM_INT);
 
 $PAGE->set_url('/mod/apply/delete_item.php', array('id'=>$id, 'deleteitem'=>$deleteitem));
 

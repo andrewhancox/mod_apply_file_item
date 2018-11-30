@@ -29,7 +29,7 @@ $url = new moodle_url('/mod/apply/index.php', array('id'=>$id));
 $PAGE->set_url($url);
 
 if (!$course = $DB->get_record('course', array('id'=>$id))) {
-	print_error('invalidcourseid');
+    print_error('invalidcourseid');
 }
 $context = context_course::instance($course->id);
 
@@ -48,9 +48,9 @@ echo $OUTPUT->header();
 
 /// Get all the appropriate data
 if (! $applys = get_all_instances_in_course('apply', $course)) {
-	$url = new moodle_url('/course/view.php', array('id'=>$course->id));
-	notice(get_string('thereareno', 'moodle', $strapplys), $url);
-	die;
+    $url = new moodle_url('/course/view.php', array('id'=>$course->id));
+    notice(get_string('thereareno', 'moodle', $strapplys), $url);
+    die;
 }
 $usesections = course_format_uses_sections($course->format);
 
@@ -63,37 +63,37 @@ $strsubmitnum   = get_string('submit_num', 'apply');
 $table = new html_table();
 
 if ($usesections) {
-	$table->head  = array($strsectionname, $strname, $strsubmitnum);
-	$table->align = array('center', 'left', 'center');
+    $table->head  = array($strsectionname, $strname, $strsubmitnum);
+    $table->align = array('center', 'left', 'center');
 } 
 else {
-	$table->head  = array($strname, $strsubmitnum);
-	$table->align = array('left', 'center');
+    $table->head  = array($strname, $strsubmitnum);
+    $table->align = array('left', 'center');
 }
 
 if (has_capability('mod/apply:viewreports', $context)) {
-	$userid = 0;
+    $userid = 0;
 }
 else {
-	$userid = $USER->id;
+    $userid = $USER->id;
 }
 
 //
 foreach ($applys as $apply) {
-	$viewurl = new moodle_url('/mod/apply/view.php', array('id'=>$apply->coursemodule, 'do_show'=>'view'));
+    $viewurl = new moodle_url('/mod/apply/view.php', array('id'=>$apply->coursemodule, 'do_show'=>'view'));
 
-	$dimmedclass = $apply->visible ? '' : 'class="dimmed"';
-	$link = '<a '.$dimmedclass.' href="'.$viewurl->out().'">'.$apply->name.'</a>';
+    $dimmedclass = $apply->visible ? '' : 'class="dimmed"';
+    $link = '<a '.$dimmedclass.' href="'.$viewurl->out().'">'.$apply->name.'</a>';
 
-	if ($usesections) {
-		$tabledata = array(get_section_name($course, $apply->section), $link);
-	}
-	else {
-		$tabledata = array($link);
-	}
-	$tabledata[] = intval(apply_get_valid_submits_count($apply->id, $userid));
+    if ($usesections) {
+        $tabledata = array(get_section_name($course, $apply->section), $link);
+    }
+    else {
+        $tabledata = array($link);
+    }
+    $tabledata[] = intval(apply_get_valid_submits_count($apply->id, $userid));
 
-	$table->data[] = $tabledata;
+    $table->data[] = $tabledata;
 }
 echo '<br />';
 

@@ -27,12 +27,12 @@ $string['messageprovider:message']    = 'Message';
 $string['messageprovider:processed']  = 'Operation was Processed';
 
 $string['accept_entry'] = 'accept';
-$string['acked_accept']  = 'Accept';
-$string['acked_notyet']  = 'Not Yet';
-$string['acked_reject']  = 'Reject';
+$string['acked_accept'] = 'Accept';
+$string['acked_notyet'] = 'Not Yet';
+$string['acked_reject'] = 'Reject';
 $string['add_item']  = 'Add entry item to activity';
 $string['add_items'] = 'Add entry items to activity';
-$string['add_pagebreak'] = 'Add a page break';
+$string['add_pagebreak'] = 'Add a page break for depending';
 $string['adjustment'] = 'Adjustment';
 $string['apply_is_not_ready'] = 'Apply is not ready yet. Please edit items first.';
 $string['apply:addinstance'] = 'Add a new apply';
@@ -48,6 +48,7 @@ $string['apply:operatesubmit'] = 'Operation of Entry';
 $string['apply:preview'] = 'Preview';
 $string['apply:receivemail'] = 'Receive email notification';
 $string['apply:submit'] = 'Submit a Entry';
+$string['apply:preview_submit'] = 'Submit Screen Preview';
 $string['apply:view'] = 'View a Apply';
 $string['apply:viewentries'] = 'List of Entries';
 $string['apply:viewanalysepage'] = 'View the analysis page after submit';
@@ -91,13 +92,13 @@ $string['depending_help'] = 'It is possible to show an item depending on the val
 <strong>Here is an example.</strong><br />
 <ul>
 <li>First, create an item on which another item will depend on.</li>
-<li>Next, add a pagebreak.</li>
+<li>Next, add a pagebreak for depending.</li>
 <li>Then add the items dependant on the value of the item created before. Choose the item from the list labelled "Dependence item" and write the required value in the textbox labelled "Dependence value".</li>
 </ul>
 <strong>The item structure should look like this.</strong>
 <ol>
 <li>Item Q: Do you have a car? A: yes/no</li>
-<li>Pagebreak</li>
+<li>Pagebreak for depending</li>
 <li>Item Q: What colour is your car?<br />
 (this item depends on item 1 with value = yes)</li>
 <li>Item Q: Why don\'t you have a car?<br />
@@ -132,8 +133,15 @@ $string['email_user_reject'] = 'Your application was rejected';
 $string['email_user_other']  = 'The administrator has processed your application';
 $string['email_noreply'] = 'This email is automatically. Please do not reply to this email.';
 //
+$string['only_acked_accept'] = 'Reception Only';
+$string['only_acked_accept_help'] = 'Enable to only accept reception. Specify when processing is not required.'; 
 $string['enable_deletemode'] = 'Delete Mode';
 $string['enable_deletemode_help'] = 'This enables a teacher to delete all applications.<br />Usually, please set to "No" for safety.'; 
+$string['can_discard'] = 'Can Discard';
+$string['can_discard_help'] = 'Enable cancellation of application.'; 
+$string['date_format']      = 'Display format of date(time)';
+$string['date_format_default'] = '%m/%d/%y %H:%M';
+$string['date_format_help'] = 'Specify display format of date and time. The default is '.$string['date_format_default'];
 $string['entries_list_title'] = 'List of Entries';
 $string['entry_saved'] = 'Your applocation has been saved. Thank you.';
 $string['entry_saved_draft'] = 'Your applocation has been saved as <strong>Draft</strong>.';
@@ -167,7 +175,7 @@ It is used for an administrator\'s memo etc.</li></ul>
 </li>
 </ul>';
 
-$string['item_name'] = 'Question';
+$string['item_name'] = 'Item Name';
 $string['items_are_required'] = 'Answers are required to starred items.';
 $string['label'] = 'Label';
 $string['maximal'] = 'maximal';
@@ -205,7 +213,7 @@ $string['operate_submit'] = 'Operate';
 $string['operate_submit_button'] = ' Process ';
 $string['operation_error_execd'] = 'When you do not accept entry, you can not checke "done"';
 $string['overview'] = 'Overview and Submit';
-$string['pagebreak'] = 'Page break';
+$string['pagebreak'] = 'Page break for depending';
 $string['pluginadministration'] = 'Apply administration';
 $string['pluginname'] = 'Application Form';
 $string['position'] = 'Position';
@@ -254,6 +262,13 @@ $string['textarea_width'] = 'Width';
 $string['textfield'] = 'Short text answer';
 $string['textfield_maxlength'] = 'Maximum characters accepted';
 $string['textfield_size'] = 'Textfield width';
+$string['outside_style'] = 'Border style of item';
+$string['outside_style_default'] = 'border: 0px solid';
+$string['outside_style_help'] = 'The style of the border around the item. This setting is ignored in the table. The default is ( '.$string['outside_style_default'].' )';
+$string['item_style'] = 'Style of item';
+$string['item_style_default'] = '';
+$string['item_style_help'] = 'The style of the item. The Default is ( '.$string['item_style_default'].' )';
+
 $string['time_close'] = 'Time to close';
 $string['time_close_help'] = 'You can specify times when the apply is accessible for people to answer the applications. 
 If the checkbox is not ticked there is no limit defined.';
@@ -274,11 +289,15 @@ $string['update_item'] = 'Save changes to question';
 $string['use_calendar'] = 'Use Calendar';
 $string['use_calendar_help'] = 'The period for submission of an application is registered into a calendar.';
 $string['use_item'] = 'use {$a}';
-$string['use_one_line_for_each_value'] = '<br />Use one line for each answer!';
+$string['use_one_line_for_each_value'] = 'Use one line for each value!';
 $string['use_this_template'] = 'Use this template';
 $string['user_pic']  	 = 'Picture';
 $string['username_manage'] = 'Manage of Username';
 $string['username_manage_help'] = 'You can select displied name pattern in this module.';
+//$string['firstname'] = get_string('firstname');
+//$string['lastname']  = get_string('lastname');
+$string['firstlastname'] = get_string('firstname').' '.get_string('lastname');
+$string['lastfirstname'] = get_string('lastname').' '.get_string('firstname');
 $string['using_templates'] = 'Use a template';
 $string['vertical'] = 'vertical';
 $string['view_entries'] = 'Show Entries';
@@ -286,3 +305,30 @@ $string['wiki_url'] = 'http://www.nsl.tuis.ac.jp/xoops/modules/xpwiki/?mod_apply
 $string['yes_button'] = ' Yes ';
 
 $string['submit_num'] = 'Submitted number';
+
+// for new added items (1.3.0)
+$string['fixedtitle'] = 'Fixed Title';
+$string['tablestart'] = 'Table Start';
+$string['tableend']   = 'Table End';
+$string['no_table']   = 'Table is not started!';
+$string['nested_table'] = 'Table is nested!';
+$string['not_close_table'] = 'The table is not closed';
+$string['table_columns'] = 'Number of columns';
+$string['table_border'] = 'Border size of inside table';
+$string['table_border_help'] = 'The border size of the frame of table is incremented by 1';
+$string['table_border_style'] = 'Border style of inside table';
+$string['table_border_style_help'] = 'The border style of outside table is solid (fix)';
+$string['table_th_sizes'] = 'Width(px) of each column';
+$string['table_th_sizes_help'] = 'Specify the width (px unit) of each column separated by commas.';
+$string['table_th_strings'] = 'Title of each column';
+$string['table_th_strings_help'] = 'Describe the title of each column separated by line feed. That is, one title is written on one line.';
+$string['table_disp_iname'] = 'Display item name';
+$string['table_disp_iname_help'] = 'Display the name of the item in table.';
+
+//
+$string['printpagebreak']  = 'Add a page break for printing';
+$string['pagebreak_title'] = 'Page Break for Printing';
+$string['pagebreak_style'] = 'Style of page break line';
+$string['pagebreak_style_default'] = '1px solid';
+$string['pagebreak_style_help'] = 'The style of the page break line (&lt; hr /&gt;). The Default is ( '.$string['pagebreak_style_default'].' ). In case of empty, the line is not drawn on print screen. The page break line is not displayed on the submit screen and the preview of the submit screen.';
+

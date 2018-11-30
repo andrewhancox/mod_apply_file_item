@@ -36,30 +36,60 @@
 
 function xmldb_apply_upgrade($oldversion)
 {
-	global $CFG, $DB;
+    global $CFG, $DB;
 
-	$dbman = $DB->get_manager();
+    $dbman = $DB->get_manager();
 
-	// 2013042002
-	if ($oldversion < 2013042002) {
-		$table = new xmldb_table('apply');
-		//
-		$field = new xmldb_field('enable_deletemode', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'name_pattern');
-		if (!$dbman->field_exists($table, $field)) {
-			$dbman->add_field($table, $field);
-		}
-	}
+    // 2013042002
+    if ($oldversion < 2013042002) {
+        $table = new xmldb_table('apply');
+        //
+        $field = new xmldb_field('enable_deletemode', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'name_pattern');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+    }
 
-	// 2014112300 
-	if ($oldversion < 2014112300) {
-		$table = new xmldb_table('apply');
-		//
-		$field = new xmldb_field('email_notification_user', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'email_notification');
-		if (!$dbman->field_exists($table, $field)) {
-			$dbman->add_field($table, $field);
-		}
-	}
+    // 2014112300 
+    if ($oldversion < 2014112300) {
+        $table = new xmldb_table('apply');
+        //
+        $field = new xmldb_field('email_notification_user', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'email_notification');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+    }
 
-	return true;
+    // 2018091701
+    if ($oldversion < 2018091701) {
+        $table = new xmldb_table('apply');
+        //
+        $field = new xmldb_field('only_acked_accept', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '0', 'name_pattern');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+    }
+
+    // 2018091901
+    if ($oldversion < 2018091901) {
+        $table = new xmldb_table('apply');
+        //
+        $field = new xmldb_field('can_discard', XMLDB_TYPE_INTEGER, '1', null, XMLDB_NOTNULL, null, '1', 'enable_deletemode');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+    }
+
+    // 2018091903
+    if ($oldversion < 2018091903) {
+        $table = new xmldb_table('apply');
+        //
+        $field = new xmldb_field('date_format', XMLDB_TYPE_CHAR, '32', null, XMLDB_NOTNULL, null, ' ', 'can_discard');
+        if (!$dbman->field_exists($table, $field)) {
+            $dbman->add_field($table, $field);
+        }
+    }
+
+    return true;
 }
 

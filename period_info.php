@@ -27,25 +27,25 @@ defined('MOODLE_INTERNAL') OR die('not allowed');
 
 //echo $OUTPUT->box_start('boxaligncenter boxwidthwide');
 //{
-	if ($apply->time_open) {
-		echo $OUTPUT->box_start('apply_info');
-		echo '<span class="apply_info">';
-		echo get_string('time_open', 'apply').': ';
-		echo '</span>';
-		echo '<span class="apply_info_value">';
-		echo userdate($apply->time_open);
-		echo '</span>';
-		echo $OUTPUT->box_end();
-	}
-	if ($apply->time_close) {
-		echo $OUTPUT->box_start('apply_info');
-		echo '<span class="apply_info">';
-		echo get_string('time_close', 'apply').': ';
-		echo '</span>';
-		echo '<span class="apply_info_value">';
-		echo userdate($apply->time_close);
-		echo '</span>';
-		echo $OUTPUT->box_end();
-	}
+    if ($apply->time_open) {
+        echo $OUTPUT->box_start('apply_info');
+        echo '<span class="apply_info">';
+        echo get_string('time_open', 'apply').': ';
+        echo '</span>';
+        echo '<span class="apply_info_value">';
+        echo userdate($apply->time_open);
+        echo '</span>';
+        echo $OUTPUT->box_end();
+    }
+    if ($apply->time_close) {
+        echo $OUTPUT->box_start('apply_info');
+        echo '<span class="apply_info">';
+        echo get_string('time_close', 'apply').': ';
+        echo '</span>';
+        echo '<span class="apply_info_value">';
+        echo userdate($apply->time_close);
+        echo '</span>';
+        echo $OUTPUT->box_end();
+    }
 //}
 //echo $OUTPUT->box_end();

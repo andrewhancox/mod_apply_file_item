@@ -31,7 +31,7 @@
 class backup_apply_activity_structure_step extends backup_activity_structure_step
 {
     protected function define_structure()
-	{
+    {
         global $DB;
 
         // To know if we are including userinfo
@@ -39,46 +39,46 @@ class backup_apply_activity_structure_step extends backup_activity_structure_ste
 
         //
         // Define each element separated
-        $apply = new backup_nested_element('apply', array('id'), array(		// no course
+        $apply = new backup_nested_element('apply', array('id'), array(        // no course
             'name', 'intro', 'introformat', 'email_notification', 'email_notification_user', 'multiple_submit', 'use_calendar', 
-			'name_pattern', 'enable_deletemode', 'time_open', 'time_close', 'time_modified'));
+            'name_pattern', 'only_acked_accept', 'enable_deletemode', 'can_discard', 'date_format', 'time_open', 'time_close', 'time_modified'));
 
         //$template = new backup_nested_element('template', array('id'), array('name', 'ispublic')); // no course
 
-        $submit = new backup_nested_element('submit', array('id'), array(	// no apply_id
-			'user_id', 'version', 'title',  'class',  'acked',  'acked_user',  'acked_time',  'execd',  'execd_user',  'execd_time', 
-			'time_modified',     'otitle', 'oclass', 'oacked', 'oacked_user', 'oacked_time', 'oexecd', 'oexecd_user', 'oexecd_time'));
+        $submit = new backup_nested_element('submit', array('id'), array(    // no apply_id
+            'user_id', 'version', 'title',  'class',  'acked',  'acked_user',  'acked_time',  'execd',  'execd_user',  'execd_time', 
+            'time_modified',     'otitle', 'oclass', 'oacked', 'oacked_user', 'oacked_time', 'oexecd', 'oexecd_user', 'oexecd_time'));
 
-        $item = new backup_nested_element('item', array('id'), array(		// no apply_id
-			'template', 'name', 'label', 'presentation', 'typ', 'hasvalue', 'position', 'required', 'dependitem', 'dependvalue', 'options'));
+        $item = new backup_nested_element('item', array('id'), array(        // no apply_id
+            'template', 'name', 'label', 'presentation', 'typ', 'hasvalue', 'position', 'required', 'dependitem', 'dependvalue', 'options'));
 
         $value = new backup_nested_element('value', array('id'), array('item_id', 'version', 'value', 'time_modified')); // no submit_id
 
-		//
+        //
         $items   = new backup_nested_element('items');
         $submits = new backup_nested_element('submits');
         $values  = new backup_nested_element('values');
 
         //
         // Build the tree
-		$apply->add_child($items);
-		$apply->add_child($submits);
+        $apply->add_child($items);
+        $apply->add_child($submits);
 
-		$items->add_child($item);
+        $items->add_child($item);
 
-		$submits->add_child($submit);
-		$submit->add_child($values);
-		$values->add_child($value);
+        $submits->add_child($submit);
+        $submit->add_child($values);
+        $values->add_child($value);
 
         //
         // Define sources
         $apply->set_source_table('apply', array('id' => backup::VAR_ACTIVITYID));
         $item->set_source_table('apply_item', array('apply_id' => backup::VAR_PARENTID));
 
-		if ($userinfo) {
-        	$submit->set_source_table('apply_submit', array('apply_id' => backup::VAR_PARENTID));
-        	$value->set_source_table('apply_value', array('submit_id' => backup::VAR_PARENTID));
-		}
+        if ($userinfo) {
+            $submit->set_source_table('apply_submit', array('apply_id' => backup::VAR_PARENTID));
+            $value->set_source_table('apply_value', array('submit_id' => backup::VAR_PARENTID));
+        }
 
         //
         // Define id annotations

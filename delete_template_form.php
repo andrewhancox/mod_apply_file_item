@@ -24,7 +24,7 @@
 
 //It must be included from a Moodle page
 if (!defined('MOODLE_INTERNAL')) {
-	die('Direct access to this script is forbidden.');
+    die('Direct access to this script is forbidden.');
 }
 
 require_once($CFG->libdir.'/formslib.php');
@@ -32,21 +32,21 @@ require_once($CFG->libdir.'/formslib.php');
 
 class mod_apply_delete_template_form extends moodleform
 {
-	public function definition()
-	{
-		$mform =& $this->_form;
+    public function definition()
+    {
+        $mform =& $this->_form;
 
-		// hidden elements
-		$mform->addElement('hidden', 'id');
-		$mform->setType('id', PARAM_INT);
-		$mform->addElement('hidden', 'delete_templ');
-		$mform->setType('delete_templ', PARAM_INT);
-		$mform->addElement('hidden', 'confirm_delete');
-		$mform->setType('confirm_delete', PARAM_INT);
+        // hidden elements
+        $mform->addElement('hidden', 'id');
+        $mform->setType('id', PARAM_INT);
+        $mform->addElement('hidden', 'delete_templ');
+        $mform->setType('delete_templ', PARAM_INT);
+        $mform->addElement('hidden', 'confirm_delete');
+        $mform->setType('confirm_delete', PARAM_INT);
 
-		//-------------------------------------------------------------------------------
-		// buttons
-		$this->add_action_buttons(true, get_string('yes_button', 'apply'));
+        //-------------------------------------------------------------------------------
+        // buttons
+        $this->add_action_buttons(true, get_string('yes_button', 'apply'));
 
-	}
+    }
 }
