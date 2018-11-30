@@ -417,6 +417,10 @@ class apply_item_multichoice extends apply_item_base
             case 'd':
                 $this->print_item_dropdown($presentation, $item, false, $info, $align);
                 break;
+            //LUIS ADDED m:
+            case 'm':
+                $this->print_item_multidropdown($presentation, $item, false, $info, $align);
+                break;
         }
         //echo '</ul>';
         apply_item_box_end();
@@ -532,6 +536,10 @@ class apply_item_multichoice extends apply_item_base
             case 'd':
                 $this->print_item_dropdown($presentation, $item, $value, $info, $align);
                 break;
+            //LUIS ADDED m:
+            case 'm':
+                $this->print_item_multidropdown($presentation, $item, $values, $info, $align);
+                break;
         }
         //echo '</ul>';
         apply_item_box_end();
@@ -580,7 +588,7 @@ class apply_item_multichoice extends apply_item_base
 
         //test if required and no value is set so we have to mark this item
         //we have to differ check and the other subtypes
-        if ($info->subtype == 'c') {
+        if (($info->subtype == 'c') || ($info->subtype == 'm')) {
             if (is_array($value)) {
                 $values = $value;
             }
@@ -602,6 +610,25 @@ class apply_item_multichoice extends apply_item_base
 
         $index = 1;
         if ($info->subtype == 'c') {
+            $match = false;
+            echo $OUTPUT->box_start('generalbox boxalign'.$align);
+            apply_item_box_start($item);
+            foreach ($presentation as $pres) {
+                foreach ($values as $val) {
+                    if ($val == $index) {
+                        echo '<div class="apply_item_multianswer">';
+                        echo text_to_html($pres, true, false, false);
+                        echo '</div>';
+                        $match = true;
+                        break;
+                    }
+                }
+                $index++;
+            }
+            if (!$match) echo '&nbsp;';
+            apply_item_box_end();
+            echo $OUTPUT->box_end();
+        } else if ($info->subtype == 'm') {
             $match = false;
             echo $OUTPUT->box_start('generalbox boxalign'.$align);
             apply_item_box_start($item);
@@ -706,7 +733,7 @@ class apply_item_multichoice extends apply_item_base
         else {
             $subtype = substr($data->subtype, 0, 1);
         }
-        if (isset($data->horizontal) AND $data->horizontal == 1 AND $subtype != 'd') {
+        if (isset($data->horizontal) AND $data->horizontal == 1 AND ($subtype != 'd' OR $subtype != 'm')) {
             $present .= APPLY_MULTICHOICE_ADJUST_SEP.'1';
         }
 
@@ -742,7 +769,8 @@ class apply_item_multichoice extends apply_item_base
             $info->subtype = 'r';
         }
 
-        if ($info->subtype != 'd') {
+        //LUIS ADDED 'm' TO SUPPORT THE NEW MULTI-SELECT LIST
+        if (($info->subtype != 'd') || ($info->subtype != 'm')) {
             $parts = explode(APPLY_MULTICHOICE_ADJUST_SEP, $info->presentation);
             @list($info->presentation, $info->horizontal) = $parts;
             if (isset($info->horizontal) AND $info->horizontal == 1) {
@@ -915,6 +943,49 @@ class apply_item_multichoice extends apply_item_base
                 ?>
                     <option value="<?php echo $index;?>" <?php echo $selected;?>>
                         <?php echo text_to_html($dropdown, true, false, false);?>
+                    </option>
+                <?php
+                    $index++;
+                }
+                ?>
+            </select>
+        </li>
+        <?php
+    }
+
+
+    private function print_item_multidropdown($presentation, $item, $value, $info, $align) {
+        if (is_array($value)) {
+            $values = $value;
+        } else {
+            $values = array($value);
+        }
+
+        if ($info->horizontal) {
+            $hv = 'h';
+        } else {
+            $hv = 'v';
+        }
+
+        ?>
+        <li class="apply_item_select_<?php echo $hv.'_'.$align;?>">
+            <label class="accesshide" for="<?php echo $item->typ .'_' . $item->id;?>"><?php echo $item->name; ?></label>
+            <select multiple id="<?php echo $item->typ .'_' . $item->id;?>" name="<?php echo $item->typ .'_' . $item->id;?>[]" size="10">
+                <?php
+                $index = 1;
+                $selected = '';
+                foreach ($presentation as $multidropdown) {
+                    foreach ($values as $val) {
+                        if ($val == $index) {
+                            $selected = 'selected="selected"';
+                            break;
+                        } else {
+                            $selected = '';
+                        }
+                    }
+                ?>
+                    <option value="<?php echo $index;?>" <?php echo $selected;?>>
+                        <?php echo text_to_html($multidropdown, true, false, false);?>
                     </option>
                 <?php
                     $index++;

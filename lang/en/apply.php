@@ -26,15 +26,17 @@ $string['messageprovider:submission'] = 'Operation of Entry';
 $string['messageprovider:message']    = 'Message';
 $string['messageprovider:processed']  = 'Operation was Processed';
 
-$string['accept_entry'] = 'accept';
-$string['acked_accept'] = 'Accept';
+//$string['accept_entry'] = 'accept';
+$string['accept_entry'] = 'Reviewed';
+$string['acked_accept'] = 'Accepted';
 $string['acked_notyet'] = 'Not Yet';
-$string['acked_reject'] = 'Reject';
-$string['add_item']  = 'Add entry item to activity';
+//$string['acked_reject'] = 'Reject';
+$string['acked_reject'] = 'Further action required';
+$string['add_item'] = 'Add entry item to activity';
 $string['add_items'] = 'Add entry items to activity';
-$string['add_pagebreak'] = 'Add a page break for depending';
+$string['add_pagebreak'] = 'Add a page break';
 $string['adjustment'] = 'Adjustment';
-$string['apply_is_not_ready'] = 'Apply is not ready yet. Please edit items first.';
+$string['apply_is_not_ready'] = 'The application form is not ready yet. The administrator must add items to the form.';
 $string['apply:addinstance'] = 'Add a new apply';
 $string['apply:applies'] = 'issue a apply';
 $string['apply:createprivatetemplate'] = 'Create private template';
@@ -49,17 +51,22 @@ $string['apply:preview'] = 'Preview';
 $string['apply:receivemail'] = 'Receive email notification';
 $string['apply:submit'] = 'Submit a Entry';
 $string['apply:preview_submit'] = 'Submit Screen Preview';
-$string['apply:view'] = 'View a Apply';
+$string['apply:view'] = 'View an application form';
 $string['apply:viewentries'] = 'List of Entries';
 $string['apply:viewanalysepage'] = 'View the analysis page after submit';
 $string['apply:viewreports'] = 'View reports';
-$string['apply_is_already_submitted'] = 'Application is already submitted';
+$string['apply:viewallreports'] = 'View all reports submitted by all users';
+$string['apply_is_already_submitted'] = 'The supervision form has already been submitted';
 $string['apply_is_closed'] = 'Application period is closed';
-$string['apply_is_disable'] = 'You ca not use this Apply.';
-$string['apply_is_not_open'] = 'Application is not opened yet';
+$string['apply_is_disable'] = 'Go to the Show Entries tab to see the submitted forms for your branch.';
+$string['apply_is_not_open'] = 'Supervision form is not opened yet';
 $string['apply_options'] = 'Apply options';
+$string['attachfiles'] = 'Attach Files';
 $string['average'] = 'Average';
 $string['back_button'] = ' Back ';
+$string['busmix_product'] = 'Product';  //LUIS: 2016/10/04: Remove if not used...
+$string['busmix_percent'] = 'Percentage';  //LUIS: 2016/10/04: Remove if not used...
+$string['busmix_summary'] = 'Business Mix';  //LUIS: 2016/10/05: String description of the contents for screen readers. 
 $string['before_apply'] = 'Before submit';
 $string['cancel_entry'] = 'Cancel';
 $string['cancel_entry_button'] = ' Cancel ';
@@ -70,20 +77,27 @@ $string['check'] = 'Check Box';
 $string['checkbox'] = 'Check Boxes';
 $string['class_cancel']  = 'Cancel';
 $string['class_draft']   = 'Draft';
-$string['class_newpost'] = 'New Post';
+//$string['class_newpost'] = 'New Post';
+$string['class_newpost'] = 'New Submission<br />Ready for review by sales leader';
 $string['class_update']  = 'Update';
 $string['confirm_cancel_entry'] = 'Are you sure you want to cancel this entry?';
-$string['confirm_delete_entry'] = 'Are you sure you want to Withdraw this entry?';
+$string['confirm_delete_entry'] = 'Are you sure you want to delete this entry?';
+//$string['confirm_delete_entry'] = 'Are you sure you want to Withdraw this entry?';
 $string['confirm_delete_item'] = 'Are you sure you want to delete this element?';
-$string['confirm_delete_submit'] = 'Are you sure you want to delete this application?';
+$string['confirm_delete_submit'] = 'Are you sure you want to delete this submission?';
 $string['confirm_delete_template'] = 'Are you sure you want to delete this template?';
-$string['confirm_rollback_entry'] = 'Are you sure you want to withdraw this entry?';
+//$string['confirm_rollback_entry'] = 'Are you sure you want to withdraw this entry?';
+$string['confirm_rollback_entry'] = 'Are you sure you want to delete this entry?';
 $string['confirm_use_template'] = 'Are you sure you want to use this template?';
 $string['count_of_nums'] = 'Count of numbers';
 $string['creating_templates'] = 'Save these questions as a new template';
-$string['delete_entry'] = 'Withdraw';
-$string['delete_entry_button'] = ' Withdraw ';
+$string['datemodified'] = 'Date Modified'; // This is the qualification date modified - report_fitandproper does not incl this string, so adding it here.
+//$string['delete_entry'] = 'Withdraw';
+$string['delete_entry'] = 'Delete';
+//$string['delete_entry_button'] = ' Withdraw ';
+$string['delete_entry_button'] = ' Delete ';
 $string['delete_item'] = 'Delete item';
+//$string['delete_submit'] = 'Delete submission';
 $string['delete_submit'] = 'Delete application';
 $string['delete_template'] = 'Delete template';
 $string['delete_templates'] = 'Delete template...';
@@ -92,13 +106,13 @@ $string['depending_help'] = 'It is possible to show an item depending on the val
 <strong>Here is an example.</strong><br />
 <ul>
 <li>First, create an item on which another item will depend on.</li>
-<li>Next, add a pagebreak for depending.</li>
+<li>Next, add a pagebreak.</li>
 <li>Then add the items dependant on the value of the item created before. Choose the item from the list labelled "Dependence item" and write the required value in the textbox labelled "Dependence value".</li>
 </ul>
 <strong>The item structure should look like this.</strong>
 <ol>
 <li>Item Q: Do you have a car? A: yes/no</li>
-<li>Pagebreak for depending</li>
+<li>Pagebreak</li>
 <li>Item Q: What colour is your car?<br />
 (this item depends on item 1 with value = yes)</li>
 <li>Item Q: Why don\'t you have a car?<br />
@@ -115,6 +129,7 @@ $string['edit_entry'] = 'Edit';
 $string['edit_entry_button'] = ' Edit ';
 $string['edit_item'] = 'Edit question';
 $string['edit_items'] = 'Edit Items';
+$string['apply:editsubmissions'] = 'Edit submissions';
 
 $string['email_entry'] = 'Send email to applicant';
 $string['email_notification'] = 'Send email notifications to admin';
@@ -127,27 +142,33 @@ You can view it here:
 {$a->url}';
 $string['email_confirm_html'] = ' : <i>\'{$a->apply}\'</i><br /><br /> You can view it <a href="{$a->url}">here</a>.';
 $string['email_teacher'] = '{$a->username} has submitted apply activity';
-$string['email_user_done']   = 'Your application is processing has been completed';
-$string['email_user_accept'] = 'Your application was accepted';
-$string['email_user_reject'] = 'Your application was rejected';
-$string['email_user_other']  = 'The administrator has processed your application';
-$string['email_noreply'] = 'This email is automatically. Please do not reply to this email.';
+$string['email_user_done']   = 'Your submission is processing has been completed';
+$string['email_user_accept'] = 'Your submission was accepted';
+$string['email_user_reject'] = 'Your submission was rejected';
+$string['email_user_other']  = 'The administrator has processed your submission';
+//$string['email_noreply'] = 'This email is automatically. Please do not reply to this email.';
+$string['email_noreply'] = 'This email is automatically generated. Please do not reply to this email, you will not get a response. Contact accreditation@liberty.co.za if you have any queries.';
 //
 $string['only_acked_accept'] = 'Reception Only';
 $string['only_acked_accept_help'] = 'Enable to only accept reception. Specify when processing is not required.'; 
 $string['enable_deletemode'] = 'Delete Mode';
-$string['enable_deletemode_help'] = 'This enables a teacher to delete all applications.<br />Usually, please set to "No" for safety.'; 
+$string['enable_deletemode_help'] = 'This enables a teacher to delete all submissions.<br />Usually, please set to "No" for safety.'; 
 $string['can_discard'] = 'Can Discard';
 $string['can_discard_help'] = 'Enable cancellation of application.'; 
 $string['date_format']      = 'Display format of date(time)';
 $string['date_format_default'] = '%m/%d/%y %H:%M';
 $string['date_format_help'] = 'Specify display format of date and time. The default is '.$string['date_format_default'];
 $string['entries_list_title'] = 'List of Entries';
-$string['entry_saved'] = 'Your applocation has been saved. Thank you.';
-$string['entry_saved_draft'] = 'Your applocation has been saved as <strong>Draft</strong>.';
-$string['entry_saved_operation'] = 'Your request has been processed.';
-$string['execd_done']    = 'Done';
-$string['execd_entry']  = 'done';
+//$string['entry_saved'] = 'Your applocation has been saved. Thank you.';
+$string['entry_saved'] = 'Your submission has been successfully saved. Your Sales Leader can review it for signoff.';
+//$string['entry_saved_draft'] = 'Your applocation has been saved as <strong>Draft</strong>.';
+$string['entry_saved_draft'] = 'Your submission has been saved as a <strong>Draft</strong>. You still need to submit the form so that your Sales Leader can review it and signoff.';
+//$string['entry_saved_operation'] = 'Your request has been processed.';
+$string['entry_saved_operation'] = 'Your submission has been processed.';
+//$string['execd_done']    = 'Done';
+$string['execd_done'] = 'Approved';
+//$string['execd_entry']  = 'done';
+$string['execd_entry']  = 'Approve';
 $string['execd_notyet']  = 'Not Yet';
 $string['exist'] = 'Exist';
 $string['export_templates'] = 'Export templates';
@@ -175,13 +196,33 @@ It is used for an administrator\'s memo etc.</li></ul>
 </li>
 </ul>';
 
-$string['item_name'] = 'Item Name';
+$string['accred'] = 'Product Accreditation';
+$string['accred_label'] = 'Accred';
+$string['accred_label_help'] = 'Accreditation<br />';
+$string['accred_usernotfound'] = 'User not found<br />';
+$string['accred_tablenorows'] = 'No accreditation records found. You probably have not submitted any online exams.<br />';
+
+$string['busmix'] = 'Business Mix';
+
+$string['item_accred'] = 'Product Accreditation';
+$string['item_accred_help'] = 'Accreditation<br />Your accreditation records. These are the examd you have submitted on the Learning University.';
+
+
+//$string['item_name'] = 'Item Name';
+$string['item_name'] = 'Question';
 $string['items_are_required'] = 'Answers are required to starred items.';
 $string['label'] = 'Label';
+$string['file'] = 'File';
+$string['manager'] = 'Sales Leader';
+$string['managertype'] = 'Sales Leaders';
+$string['manager_values'] = 'Sales Leaders';
 $string['maximal'] = 'maximal';
-$string['modulename'] = 'Application Form';
-$string['modulename_help'] = 'You can make simple Application Forms and make a user submit it.';
-$string['modulenameplural'] = 'Application Forms';
+//$string['modulename'] = 'Application Form';
+$string['modulename'] = 'Supervision Form';
+//$string['modulename_help'] = 'You can make simple Application Forms and make a user submit it.';
+$string['modulename_help'] = 'You can make simple Supervision Forms and make a user submit it.';
+//$string['modulenameplural'] = 'Application Forms';
+$string['modulenameplural'] = 'Supervision Forms';
 $string['move_here'] = 'Move here';
 $string['move_item'] = 'Move this question';
 $string['movedown_item'] = 'Move this question down';
@@ -190,6 +231,14 @@ $string['multichoice'] = 'Multiple choice';
 $string['multichoice_values'] = 'Multiple choice values';
 $string['multichoicerated'] = 'Multiple choice (rated)';
 $string['multichoicetype'] = 'Multiple choice type';
+
+// LUIS Add support for the multidropdown list type
+$string['multidropdown'] = 'Multi-Select List';
+
+$string['multiselect'] = 'Multiple select';
+$string['multiselect_values'] = 'Multiple select values';
+$string['multiselectrated'] = 'Multiple select (rated)';
+$string['multiselecttype'] = 'Multiple select type';
 $string['multiple_submit'] = 'Multiple Submissions';
 $string['multiple_submit_help'] = 'If enabled for anonymous surveys, users can submit apply an unlimited number of times.';
 $string['name'] = 'Name';
@@ -204,36 +253,51 @@ $string['no_templates_available_yet'] = 'No templates available yet';
 $string['no_title'] = 'No Title';
 $string['not_selected'] = 'not Selected';
 $string['not_exist'] = 'not Exist';
+$string['nothingtodisplay'] = 'No activities matching your access level have been captured yet.';
 $string['numeric'] = 'Numeric answer';
 $string['numeric_range_from'] = 'Range from';
 $string['numeric_range_to'] = 'Range to';
 $string['only_one_captcha_allowed'] = 'Only one captcha is allowed in a apply';
 $string['operate_is_disable'] = 'You ca not use this Operation';
-$string['operate_submit'] = 'Operate';
+//$string['operate_submit'] = 'Operate';
+//LUIS: Is this a better label?
+$string['operate_submit'] = 'Review';
 $string['operate_submit_button'] = ' Process ';
-$string['operation_error_execd'] = 'When you do not accept entry, you can not checke "done"';
+//$string['operation_error_execd'] = 'When you do not accept entry, you can not checke "done"';
+$string['operation_error_execd'] = 'When you do not accept entry, you cannot check "approve". Submissions that require further action cannot be approved.';
 $string['overview'] = 'Overview and Submit';
-$string['pagebreak'] = 'Page break for depending';
+//$string['pagebreak'] = 'Page break for depending';
+$string['pagebreak'] = 'Page break';
 $string['pluginadministration'] = 'Apply administration';
-$string['pluginname'] = 'Application Form';
+//$string['pluginname'] = 'Application Form';
+$string['pluginname'] = 'Supervision Form';
 $string['position'] = 'Position';
 $string['preview'] = 'Preview';
 $string['preview_help'] = 'In the preview you can change the order of questions.';
 $string['previous_apply'] = 'Previous submit';
 $string['previous_page_button'] = ' Previous page ';
 $string['public'] = 'Public';
+$string['qualifications_tablenorows'] = 'Your manager has not captured your tertiary qualifications on the Journey To Professionalism tracker on the SRS system.<br />The qualifications will reflect here once that has been done.';
+$string['qualifications_usernotfound'] = 'The specified user Party ID number was not found in the database';
+$string['qualifications'] = 'Tertiary qualifications';
 $string['radio'] = 'Radio Button';
 $string['radiobutton'] = 'Radio Button';
 $string['radiobutton_rated'] = 'Radio Button (Rated)';
 $string['radiorated'] = 'Radio Button (Rated)';
-$string['reject_entry'] = 'reject';
+$string['reexams'] = 'Regulatory Exams';
+$string['reexams_tablenorows'] = 'Your manager has not captured your Regulatory Exam results on the Journey To Professionalism tracker on the SRS system. The results will reflect here once that has been done.';
+$string['reexams_usernotfound'] = 'The specified user Party ID number was not found in the database';
+//$string['reject_entry'] = 'reject';
+$string['reject_entry'] = 'Requires further action';
 $string['related_items_deleted'] = 'All your user\'s responses for this question will also be deleted';
 $string['required'] = 'Required';
 $string['resetting_data'] = 'Reset apply responses';
 $string['responsetime'] = 'Responsestime';
 $string['returnto_course'] = 'Return';
-$string['rollback_entry'] = 'Withdraw';
-$string['rollback_entry_button'] = ' Withdraw ';
+$string['rollback_entry'] = 'Delete';
+//$string['rollback_entry'] = 'Withdraw';
+$string['rollback_entry_button'] = ' Delete ';
+//$string['rollback_entry_button'] = ' Withdraw ';
 $string['save_as_new_item'] = 'Save as new question';
 $string['save_as_new_template'] = 'Save as new template';
 $string['save_draft_button']  = ' Save as draft ';
@@ -249,8 +313,10 @@ $string['start'] = 'Start';
 $string['started'] = 'started';
 $string['stop'] = 'End';
 $string['subject'] = 'Subject';
-$string['submit_form_button'] = ' New Application ';
-$string['submit_new_apply']   = 'Submit a new Apply';
+//$string['submit_form_button'] = ' New Application ';
+$string['submit_form_button'] = ' New Submission ';
+//$string['submit_new_apply']   = 'Submit a new Apply';
+$string['submit_new_apply']   = 'Submit a new supervision form';
 $string['submitted'] = 'submitted';
 $string['switch_item_to_not_required'] = 'switch to: answer not required';
 $string['switch_item_to_required'] = 'switch to: answer required';
@@ -270,30 +336,36 @@ $string['item_style_default'] = '';
 $string['item_style_help'] = 'The style of the item. The Default is ( '.$string['item_style_default'].' )';
 
 $string['time_close'] = 'Time to close';
-$string['time_close_help'] = 'You can specify times when the apply is accessible for people to answer the applications. 
+$string['time_close_help'] = 'You can specify times when the form is accessible for people to submit applications. 
 If the checkbox is not ticked there is no limit defined.';
 $string['time_open'] = 'Time to open';
-$string['time_open_help'] = 'You can specify times when the apply is accessible for people to answer the applications. 
+$string['time_open_help'] = 'You can specify times when the form is accessible for people to submit applications. 
 If the checkbox is not ticked there is no limit defined.';
-$string['title_ack']   = 'Recept.';
+//$string['title_ack']   = 'Recept.';
+$string['title_ack'] = 'Reviewed by manager';
 $string['title_before'] = 'Before Submit';
 $string['title_check'] = 'Check';
 $string['title_class'] = 'Status';
 $string['title_draft'] = 'Draft';
-$string['title_exec']  = 'Exec. ';
+//$string['title_exec']  = 'Exec. ';
+$string['title_exec']  = 'Approved by manager';
 $string['title_title'] = 'Title';
-$string['title_version'] = 'Ver.';
-$string['update_entry'] = 'Update';
+//$string['title_version'] = 'Ver.';
+$string['title_version'] = 'Version';
+//$string['update_entry'] = 'Update';
+$string['update_entry'] = 'Updated by';
 $string['update_entry_button'] = ' Update ';
 $string['update_item'] = 'Save changes to question';
 $string['use_calendar'] = 'Use Calendar';
 $string['use_calendar_help'] = 'The period for submission of an application is registered into a calendar.';
 $string['use_item'] = 'use {$a}';
-$string['use_one_line_for_each_value'] = 'Use one line for each value!';
+//$string['use_one_line_for_each_value'] = 'Use one line for each value!';
+$string['use_one_line_for_each_value'] = '<br />Use one line for each answer!';
 $string['use_this_template'] = 'Use this template';
-$string['user_pic']  	 = 'Picture';
+$string['user_pic'] = 'Picture';
 $string['username_manage'] = 'Manage of Username';
-$string['username_manage_help'] = 'You can select displied name pattern in this module.';
+//$string['username_manage_help'] = 'You can select displied name pattern in this module.';
+$string['username_manage_help'] = 'You can select the displayed name pattern in this module.';
 //$string['firstname'] = get_string('firstname');
 //$string['lastname']  = get_string('lastname');
 $string['firstlastname'] = get_string('firstname').' '.get_string('lastname');

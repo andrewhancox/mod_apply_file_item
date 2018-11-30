@@ -14,6 +14,9 @@ if ($submit->user_id!=$USER->id) {
 
 $student = $DB->get_record('user', array('id'=>$submit->user_id));
 
+global $SESSION;
+$_SESSION['submituser'] = $student->id;
+
 $user_name = jbxl_get_user_name($student, $apply->name_pattern);
 $title = $user_name.' ('.userdate($submit->time_modified, '%Y/%m/%d %H:%M').')';
 

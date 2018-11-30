@@ -187,6 +187,11 @@ $SESSION->apply->is_started = false;
 if ($operate=='show_page' and $submit_id) {
     $params = array('id'=>$submit_id);
     $submit = $DB->get_record('apply_submit', $params); 
+    $entryuser = $submit->user_id;
+
+    // Store the user id of the user whose application the manager is reviewing (clicked the Review button):
+    global $SESSION;
+    $_SESSION['submituser'] = $entryuser;
 
     echo '<div align="center">';
     echo $OUTPUT->heading(format_text($apply->name), 3);
