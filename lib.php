@@ -397,6 +397,12 @@ function apply_delete_item($item_id, $renumber=true, $template=false)
     }
 
     //
+    $values = $DB->get_records('apply_value', array('item_id'=>$item_id));
+    $fs      = get_file_storage();
+    foreach ($values as $value) {
+        $fs->delete_area_files($context->id, 'mod_apply', 'fileuploads', $value->id);
+    }
+
     $DB->delete_records('apply_value', array('item_id'=>$item_id));
 
     $DB->set_field('apply_item', 'dependvalue', '', array('dependitem'=>$item_id));
@@ -561,24 +567,45 @@ function apply_print_item_preview($item)
     if ($item->typ=='pagebreak') return;
 
     $itemobj = apply_get_item_class($item->typ);
+
+    if (method_exists($itemobj, 'setcurrentitem')) {
+        $itemobj->setcurrentitem($item);
+    }
+
     $itemobj->print_item_preview($item);
 }
 
 
-function apply_print_item_submit($item, $value=false, $highlightrequire=false)
-{
+function apply_print_item_submit($item, $value=false, $highlightrequire=false, $valueid = null) {
     if ($item->typ=='pagebreak') return;
 
     $itemobj = apply_get_item_class($item->typ);
+
+    if (method_exists($itemobj, 'set_apply_value_id')) {
+        $itemobj->set_apply_value_id($valueid);
+    }
+
+    if (method_exists($itemobj, 'setcurrentitem')) {
+        $itemobj->setcurrentitem($item);
+    }
+
     $itemobj->print_item_submit($item, $value, $highlightrequire);
 }
 
 
-function apply_print_item_show_value($item, $value=false)
-{
+    function apply_print_item_show_value($item, $value=false, $valueid=false) {
     if ($item->typ=='pagebreak') return;
 
     $itemobj = apply_get_item_class($item->typ);
+
+    if (method_exists($itemobj, 'set_apply_value_id')) {
+        $itemobj->set_apply_value_id($valueid);
+    }
+
+    if (method_exists($itemobj, 'setcurrentitem')) {
+        $itemobj->setcurrentitem($item);
+    }
+
     $itemobj->print_item_show_value($item, $value);
 }
 
@@ -644,3 +671,42 @@ function apply_set_calendar_events($apply)
     }
 }
 
+/**
+ * Serves the apply files.
+ * @param object $course
+ * @param object $cm
+ * @param object $context
+ * @param string $filearea
+ * @param array $args
+ * @param bool $forcedownload
+ * @return bool false if file not found, does not return if found - just send the file
+ */
+function mod_apply_pluginfile($course, $cm, $context, $filearea, $args, $forcedownload) {
+    global $CFG, $DB;
+    require_once("$CFG->libdir/resourcelib.php");
+
+    if ($context->contextlevel != CONTEXT_MODULE) {
+        return false;
+    }
+
+    require_course_login($course, true, $cm);
+    if (!has_capability('mod/apply:view', $context)) {
+        return false;
+    }
+
+    if ($filearea !== 'fileuploads' && $filearea !== 'template_fileuploads') {
+        // intro is handled automatically in pluginfile.php
+        return false;
+    }
+
+    $fs = get_file_storage();
+    $itemid = array_shift($args);
+    $relativepath = implode('/', $args);
+    $fullpath = "/$context->id/mod_apply/$filearea/$itemid/$relativepath";
+    if (!$file = $fs->get_file_by_hash(sha1($fullpath)) or $file->is_directory()) {
+        return false;
+    }
+
+    // finally send the file
+    send_stored_file($file, 86400, 0, $forcedownload);
+}

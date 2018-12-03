@@ -27,7 +27,7 @@ echo $OUTPUT->box_start('generalbox boxaligncenter boxwidthwide');
                 if ($item->label!=APPLY_ADMIN_REPLY_TAG and $item->label!=APPLY_ADMIN_ONLY_TAG and $item->typ!='fixedtitle') {
                     apply_print_line_space();
                     echo $OUTPUT->box_start('apply_print_item');
-                    apply_print_item_submit($item, '', false);
+                    apply_print_item_submit($item, '', false, false);
                     echo $OUTPUT->box_end();
                 }
             }

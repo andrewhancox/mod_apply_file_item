@@ -172,6 +172,7 @@ $string['execd_entry']  = 'Approve';
 $string['execd_notyet']  = 'Not Yet';
 $string['exist'] = 'Exist';
 $string['export_templates'] = 'Export templates';
+$string['file'] = 'File';
 $string['hide_no_select_option'] = 'Hide the "Not selected" option';
 $string['horizontal'] = 'horizontal';
 $string['import_templates'] = 'Import templates';

@@ -44,15 +44,16 @@ foreach ($items as $item) {
     //get the values
     $params = array('submit_id'=>$submit->id, 'item_id'=>$item->id, 'version'=>$submit_ver);
     $value  = $DB->get_record('apply_value', $params);
+    $valueid = isset($value->id) ? $value->id : false;
 
     if ($item->typ!='pagebreak' and $item->label!=APPLY_SUBMIT_ONLY_TAG and $item->label!=APPLY_ADMIN_ONLY_TAG and $item->typ!='fixedtitle') {
         echo $OUTPUT->box_start('apply_print_item');
         apply_print_line_space();
         if (isset($value->value)) {
-            apply_print_item_show_value($item, $value->value);
+            apply_print_item_show_value($item, $value->value, $valueid);
         }
         else {
-            apply_print_item_show_value($item, false);
+            apply_print_item_show_value($item, false, $valueid);
         }
         echo $OUTPUT->box_end();
     }
@@ -61,10 +62,10 @@ foreach ($items as $item) {
         echo $OUTPUT->box_start('apply_print_item');
         apply_print_line_space();
         if (isset($value->value)) {
-            apply_print_item_show_value($item, $value->value);
+            apply_print_item_show_value($item, $value->value, $valueid);
         }
         else {
-            apply_print_item_show_value($item, false);
+            apply_print_item_show_value($item, false, $valueid);
         }
         echo $OUTPUT->box_end();
     }

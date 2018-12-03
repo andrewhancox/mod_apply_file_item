@@ -41,23 +41,23 @@ if ($submit) {
         $value  = $DB->get_record('apply_value', $params);
 
         echo $OUTPUT->box_start('apply_print_item');
-        if ($item->typ!='pagebreak' and $item->label!=APPLY_SUBMIT_ONLY_TAG 
+        if ($item->typ!='pagebreak' and $item->label!=APPLY_SUBMIT_ONLY_TAG
                                     and $item->label!=APPLY_ADMIN_REPLY_TAG and $item->label!=APPLY_ADMIN_ONLY_TAG and $item->typ!='fixedtitle') {
             apply_print_line_space();
             if (isset($value->value)) {
-                apply_print_item_show_value($item, $value->value);
+                apply_print_item_show_value($item, $value->value, $value->id);
             }
             else {
-                apply_print_item_show_value($item, false);
+                apply_print_item_show_value($item, false, false);
             }
         }
         else if ($item->label==APPLY_ADMIN_REPLY_TAG or $item->label==APPLY_ADMIN_ONLY_TAG and $item->typ!='fixedtitle') {
             apply_print_line_space();
             if (isset($value->value)) {
-                apply_print_item_submit($item, $value->value);
+                apply_print_item_submit($item, $value->value, false, $value->id);
             }
             else {
-                apply_print_item_submit($item, false);
+                apply_print_item_submit($item, false, false, false);
             }
         }
         echo $OUTPUT->box_end();
