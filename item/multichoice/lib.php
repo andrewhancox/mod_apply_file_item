@@ -175,6 +175,7 @@ class apply_item_multichoice extends apply_item_base
                 $ans->answercount = 0;
                 foreach ($values as $value) {
                     //ist die Antwort gleich dem index der Antworten + 1?
+                    //LUIS translation (from german): the answer is equal to the index of responses + 1 ?
                     $vallist = explode(APPLY_MULTICHOICE_LINE_SEP, $value->value);
                     foreach ($vallist as $val) {
                         if ($val == $i) {
@@ -194,6 +195,7 @@ class apply_item_multichoice extends apply_item_base
                 $ans->answercount = 0;
                 foreach ($values as $value) {
                     //ist die Antwort gleich dem index der Antworten + 1?
+                    //LUIS translation (from german): the answer is equal to the index of responses + 1 ?
                     if ($value->value == $i) {
                         $ans->answercount++;
                     }
@@ -221,7 +223,7 @@ class apply_item_multichoice extends apply_item_base
             $sizeofpresentation = count($presentation);
             for ($i = 0; $i < $sizeofvallist; $i++) {
                 for ($k = 0; $k < $sizeofpresentation; $k++) {
-                    if ($vallist[$i] == ($k + 1)) {//Die Werte beginnen bei 1, das Array aber mit 0
+                    if ($vallist[$i] == ($k + 1)) {//Die Werte beginnen bei 1, das Array aber mit 0  //LUIS: The values start at 1, but the array with 0
                         $printval .= trim($presentation[$k]) . chr(10);
                         break;
                     }
@@ -296,7 +298,7 @@ class apply_item_multichoice extends apply_item_base
 
         $data = $analysed_item[2];
 
-        //frage schreiben
+        //frage schreiben  LUIS translation: write question
         $worksheet->write_string($row_offset, 0, $item->label, $xls_formats->head2);
         $worksheet->write_string($row_offset, 1, $analysed_item[1], $xls_formats->head2);
         if (is_array($data)) {
@@ -407,6 +409,7 @@ class apply_item_multichoice extends apply_item_base
         <?php
         }
 
+        //LUIS: multiselect types: check(c), radio(r) or dropdown(d). NEW: multidropdown(m).
         switch($info->subtype) {
             case 'r':
                 $this->print_item_radio($presentation, $item, false, $info, $align);
@@ -526,6 +529,7 @@ class apply_item_multichoice extends apply_item_base
         <?php
         }
 
+        //LUIS: multiselect types: check(c), radio(r) or dropdown(d). NEW: multidropdown(m).
         switch($info->subtype) {
             case 'r':
                 $this->print_item_radio($presentation, $item, $value, $info, $align);

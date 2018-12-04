@@ -127,7 +127,7 @@ if ($student) {
     //
     if ($req_own_data) {
         if ($submit->class==APPLY_CLASS_CANCEL and $submit->acked==APPLY_ACKED_ACCEPT) {
-            // 解除が受理されたものは，ユーザは変更できない
+            // 解除が受理されたものは，ユーザは変更できない  LUIS translation: Those for which cancellation has been accepted can not be changed by the user
             $data[] = '-';
             $data[] = '-';
         }
@@ -166,7 +166,7 @@ if ($student) {
 
             //
             if ($submit->class==APPLY_CLASS_CANCEL or $apply_is_closed) {
-                // 解除を申請している場合は，内容を編集・更新できない
+                // 解除を申請している場合は，内容を編集・更新できない  LUIS translation: When applying for cancellation, contents can not be edited / updated
                 $data[] = '-';
             }
             else {
