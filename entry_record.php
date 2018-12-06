@@ -149,7 +149,7 @@ if ($student) {
                 $change_label  = get_string('edit_entry_button', 'apply');
                 $change_params = array('id'=>$id, 'submit_id'=>$submit->id, 'submit_ver'=>$submit->version, 'courseid'=>$courseid, 'go_page'=>0);
                 $change_action = 'submit.php';
-                
+
                 if ($submit->version<=1 and $apply->can_discard) {
                     // Discard
                     $discard_label  = get_string('delete_entry_button', 'apply');
@@ -189,6 +189,16 @@ if ($student) {
         $operate_url = $CFG->wwwroot.'/mod/apply/operate_submit.php';
         //$data[] = apply_single_button($operate_url, $operate_params, get_string('operate_submit', 'apply'), 'POST', '_blank');
         $data[] = apply_single_button($operate_url, $operate_params, get_string('operate_submit', 'apply'), 'POST');
+
+        if (has_capability('mod/apply:editsubmissions', $context)) {
+            $change_label           = get_string('edit_entry_button', 'apply');
+            $change_params          =
+                    array('id'      => $id, 'submit_id' => $submit->id, 'submit_ver' => $submit->version, 'courseid' => $courseid,
+                          'go_page' => 0);
+            $change_action          = 'submit.php';
+            $data[count($data) - 1] .= apply_single_button($CFG->wwwroot . '/mod/apply/' . $change_action, $change_params,
+                    $change_label);
+        }
 
         if ($apply->enable_deletemode) {
             //$form = '<form action=delete_submit.php method="POST" target="_blank">';

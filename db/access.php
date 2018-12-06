@@ -155,5 +155,16 @@ $capabilities = array(
             'editingteacher' => CAP_ALLOW
         )
     ),
+
+    'mod/apply:editsubmissions' => array(
+
+            'riskbitmask' => RISK_PERSONAL,
+
+            'captype' => 'write',
+            'contextlevel' => CONTEXT_MODULE,
+            'archetypes' => array(
+                    'manager' => CAP_ALLOW
+            )
+    ),
 );
 
