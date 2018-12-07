@@ -184,6 +184,11 @@ function apply_get_valid_submits($apply_id, $user_id=0)
 }
 
 
+// LUIS This is called in both view_entries.php (the SL view) and view.php (the FA view)
+// If no Suser_id is passed then all the submitted forms are returned, else just the forms for the logged in user, the Suser_id, are returned
+// So if user has Branch Manager capabilities then this must return all the users whose Branch Code = the Managers Branch Code.
+// To do that somewhere above we have to put the SL's Branch Code into a variable so we can compare it here.
+// Can we want to add a check here that determines if the user has Branch Manager capabilities (is a SL) - if true then show all the forms for users with the SAME branch code as this SL.
 function apply_get_valid_submits_count($apply_id, $user_id=0)
 {
     $submits = apply_get_valid_submits($apply_id, $user_id);
@@ -1069,7 +1074,7 @@ function apply_get_submitted_users_count($cm)
 // E-Mail
 //
 
-// メール受信可能な管理者
+// メール受信可能な管理者  Administrator who can receive mail
 function apply_get_receivemail_users($context)
 {
     $ret = get_users_by_capability($context, 'mod/apply:receivemail', '', 'lastname', '', '', false, '', false);

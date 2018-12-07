@@ -343,7 +343,7 @@ function jbxl_db_exist_table($table, $lower_case=false)
 //////////////////////////////////////////////////////////////////////////
 // download
 //
-// $datas: 2次元のデータ配列
+// $datas: 2次元のデータ配列  LUIS Translation: Two-dimensional data array
 //
 function  jbxl_download_data($format, $datas, $filename='')
 {

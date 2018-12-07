@@ -124,7 +124,7 @@ if ($student) {
     }
     $data[] = $form;
 
-    //
+    //$req_own_data = FALSE if you're on the Show Entries tab; TRUE if you're on the Overview and Submit tab.
     if ($req_own_data) {
         if ($submit->class==APPLY_CLASS_CANCEL and $submit->acked==APPLY_ACKED_ACCEPT) {
             // 解除が受理されたものは，ユーザは変更できない  LUIS translation: Those for which cancellation has been accepted can not be changed by the user
@@ -137,7 +137,7 @@ if ($student) {
                 $change_label   = get_string('update_entry_button', 'apply');
                 $change_params  = array('id'=>$id, 'submit_id'=>$submit->id, 'submit_ver'=>$submit->version, 'courseid'=>$courseid, 'go_page'=>0);
                 $change_action  = 'submit.php';
-                // Discard
+                // Cancel
                 if ($apply->can_discard) {
                     $discard_label  = get_string('cancel_entry_button', 'apply');
                     $discard_params = array('id'=>$id, 'submit_id'=>$submit->id);
@@ -151,7 +151,7 @@ if ($student) {
                 $change_action = 'submit.php';
 
                 if ($submit->version<=1 and $apply->can_discard) {
-                    // Discard
+                    // Delete
                     $discard_label  = get_string('delete_entry_button', 'apply');
                     $discard_params = array('id'=>$id, 'submit_id'=>$submit->id);
                     $discard_action = 'delete_submit.php';
@@ -166,7 +166,7 @@ if ($student) {
 
             //
             if ($submit->class==APPLY_CLASS_CANCEL or $apply_is_closed) {
-                // 解除を申請している場合は，内容を編集・更新できない  LUIS translation: When applying for cancellation, contents can not be edited / updated
+                // 解除を申請している場合は，内容を編集・更新できない  Translation: If you are cancelling the application form you cannot edit and update the contents
                 $data[] = '-';
             }
             else {

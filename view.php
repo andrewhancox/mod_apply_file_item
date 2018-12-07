@@ -168,7 +168,7 @@ if ($do_show!='view_one_entry' or !$submit_id) {
 
 
 ///////////////////////////////////////////////////////////////////////////
-// 新規登録
+// 新規登録 - sign up
 if ($apply_can_submit) {
     $url_params  = array('id'=>$id, 'courseid'=>$courseid, 'go_page'=>0);
     $submit_url  = new moodle_url('/mod/apply/submit.php', $url_params);
@@ -179,7 +179,7 @@ if ($apply_can_submit) {
 
 
 ///////////////////////////////////////////////////////////////////////////
-// リスト表示
+// リスト表示 - List display
 if ($do_show=='view') {
     $submits = apply_get_all_submits($apply->id, $USER->id);
     if ($submits) {

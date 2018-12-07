@@ -132,6 +132,7 @@ if ((empty($cm->visible) and !$cap_view_hidden_activities)) {
 ///////////////////////////////////////////////////////////////////////////
 // view_enties: Print the main part of the page
 
+// LUIS: If the user has the capability to view submitted application forms (i.e. user is a SL)
 if ($do_show=='view_entries') {
     ////////////////////////////////////////////////////////////
     // Setup Table
