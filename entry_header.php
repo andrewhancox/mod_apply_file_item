@@ -166,7 +166,7 @@ if ($silast) {
 }
 
 //
-//$table->initialbars(true);  // フィルター用イニシャルのテーブル
+$table->initialbars(true);  // フィルター用イニシャルのテーブル  Table of initials for filters
 
 if ($show_all) {
     $start_page = false;
