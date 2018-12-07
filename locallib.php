@@ -153,7 +153,28 @@ function apply_get_submits_select($apply_id, $user_id=0, $where='', array $param
     if ($sort) $sortsql = ' ORDER BY '.$sort;
     else       $sortsql = '';
 
-    if ($user_id) $where .= ' s.user_id='.$user_id.' AND';
+    // Determine if user is a Branch Manager by checking if s/he has the fitandproper:viewqualificationmaintenance capability
+    $syscontext = get_context_instance(CONTEXT_SYSTEM);
+    // If user IS a Branch Manager (has the viewqualificationmaintenance capability i.e. the Branch Manager role in site context)
+    // BUT user is NOT a Site Admin then add the Branch restriction
+
+    if ((has_capability('report/fitandproper:viewqualificationmaintenance', $syscontext) and 
+            !has_capability('moodle/site:config', $syscontext))) {
+       // Build the Manager query with access to all the application forms for the Manager's branch name;
+       // If user is a branch manager get his Branch Name (mdl_user.department) details
+        global $USER;
+        $branchname = $USER->department;
+        $where .= " u.department = '" . $branchname . "' AND";
+    }
+    else {
+        //LUIS Is it necessary to do this if check? What happens if you just update/define the 'where' variable?
+        if ($user_id) $where .= ' s.user_id='.$user_id.' AND';
+    }
+
+    //LUIS: Show ALL forms to users with the 'viewallreports' capability (Compliance Officers)
+    if ((has_capability('mod/apply:viewallreports', $syscontext))) {
+        $where = "version>0 AND ";
+    }
 
     $sql = 'SELECT s.* FROM {user} u, {apply_submit} s WHERE '.$where.' u.id=s.user_id AND s.apply_id=:apply_id '.$sortsql;
 

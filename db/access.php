@@ -145,6 +145,16 @@ $capabilities = array(
         )
     ),
 
+    'mod/apply:viewallreports' => array(
+
+        'riskbitmask' => RISK_PERSONAL,
+
+        'captype' => 'read',
+        'contextlevel' => CONTEXT_MODULE,
+        'archetypes' => array(
+        )
+    ),
+
     'mod/apply:receivemail' => array(
 
         'riskbitmask' => RISK_PERSONAL,
